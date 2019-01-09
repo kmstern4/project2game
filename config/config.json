@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": null,
-    "database": "exampledb",
+    "database": "playerStat",
     "host": "localhost",
     "dialect": "mysql"
   },
