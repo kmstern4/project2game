@@ -1,9 +1,5 @@
 require("dotenv").config();
 var express = require("express");
-var exphbs = require("express-handlebars");
-
-var db = require("./models");
-
 var app = express();
 var PORT = process.env.PORT || 3000;
 
@@ -17,7 +13,7 @@ app.use(express.static("public"));
 
 // Handlebars
 
-// // Routes
+// Routes
 
 if (process.env.NODE_ENV === "test") {
   syncOptions.force = true;
@@ -25,6 +21,8 @@ if (process.env.NODE_ENV === "test") {
 
 // Starting the server, syncing our models
 db.sequelize.sync({ force: true }).then(function() {
+db.sequelize.sync({ force: false }).then(function() {
+
   app.listen(PORT, function() {
     console.log(
       "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.",
