@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": null,
+    "password": "root",
     "database": "playerStat",
     "host": "localhost",
     "dialect": "mysql"
