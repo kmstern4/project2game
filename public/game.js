@@ -1,92 +1,28 @@
+var SceneA = new Phaser.Class({
 
-var config = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 300 },
-            debug: false
-        }
+    Extends: Phaser.Scene,
+
+    initialize:
+
+    function SceneA ()
+    {
+        Phaser.Scene.call(this, { key: 'sceneA' });
     },
-    scene: {
-        preload: preload,
-        create: create,
-        update: update
-    }
-};
 
-var player;
-var cursors;
-var farmzombie;
-var keydown = false;
-var textcontainer;
-var textbox;
-var text;
-var playerhealth = 50;
-var farmzombiehealth = 50;
-var hgAttackStat = 15;
-var fzAttackStat = 10;
-var hgDefenseStat = 5;
-var fzDefenseStat = 1;
-var hgEvasionStat = 10;
-var fzEvasionStat = 5;
+    preload: function ()
+    {
+        this.load.image('face', 'assets/forest.png');
+        this.load.atlas("hoodgirl", "assets/hoodgirl.png", "assets/hoodgirl.json");
+        this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
+    },
 
-var game = new Phaser.Game(config);
+    create: function ()
+    {
+        this.add.sprite(400, 300, 'face')
+        player = this.add.sprite(100, 450, "hoodgirl", "idle001.png");
+        farmzombie = this.add.sprite(600, 450, "farmzombie", "idle001.png");
 
-function preload() {
-    this.load.atlas("hoodgirl", "assets/hoodgirl.png", "assets/hoodgirl.json");
-    this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
-    this.load.image("volcano", "assets/volcano.png");
-    this.load.image("textbox", "assets/600wguibox.png");
-}
-
-function create() {
-    this.add.image(400, 300, "volcano");
-    textbox = this.add.image(0, 0, "textbox");
-    text = this.add.text(-100, -10, "Farmer zombie has died");
-    text.visible = false;
-    player = this.add.sprite(-100, 450, "hoodgirl", "idle001.png");
-    farmzombie = this.add.sprite(900, 450, "farmzombie", "idle001.png");
-
-// setting the text container
-    textcontainer = this.add.container(400, 200, textbox);
-    textcontainer.visible = false;
-
-    textcontainer.setSize(400, 100);
-
-    textcontainer.setInteractive();
-
-    textcontainer.on("pointerover", function() {
-        textbox.setTint(0x44ff44);
-    });
-
-    textcontainer.on("pointerout", function() {
-        textbox.clearTint();
-    });
-
-
-// Tweens
-    tween = this.tweens.add({
-        targets: player,
-        x: 200,
-        ease: "power1",
-        duration: 2500,
-        repeat: 0
-    });
-
-    ztween = this.tweens.add({
-        targets: farmzombie,
-        x: 600,
-        ease: "power1",
-        duration: 2500,
-        repeat: 0
-    });
-
-
-
-// Player animation creations
+        // Player animation creations
     this.anims.create({
         key: "hgattack",
         frames: this.anims.generateFrameNames("hoodgirl", { 
@@ -134,19 +70,6 @@ function create() {
         frameRate: 20,
         repeat: 0
     });
-
-    this.anims.create({
-        key: "hgwalking",
-        frames: this.anims.generateFrameNames("hoodgirl", {
-            prefix: "walking00",
-            suffix: ".png",
-            start: 1,
-            end: 24
-        }),
-        frameRate: 20,
-        repeat: 1
-    });
-
 
 // Zombie animation creations
     this.anims.create({
@@ -197,33 +120,486 @@ function create() {
         repeat: 0
     });
 
-    this.anims.create({
-        key: "fzwalking",
-        frames: this.anims.generateFrameNames("farmzombie", {
-            prefix: "walking00",
-            suffix: ".png",
-            start: 1,
-            end: 18
-        }),
-        frameRate: 20,
-        repeat: 2
-    });
-
-
 // when scene loads start playing idle animations for player and zombie
-    player.play("hgwalking");
-    farmzombie.play("fzwalking");
+    player.play("hgidle");
+    farmzombie.play("fzidle");
 
     player.on("animationcomplete", function() {
         player.play("hgidle");
     });
 
     farmzombie.on("animationcomplete", function() {
-        // console.log(this.anims.currentAnim.key);
+        console.log(this.anims.currentAnim.key);
         if (this.anims.currentAnim.key == "fzdying") {
-            textcontainer.visible = true;
-            textcontainer.add(text);
-            text.visible = true;
+            this.anims.pause();
+        } else {
+            farmzombie.play("fzidle");
+        }
+    });
+
+
+        this.input.once('pointerdown', function () {
+
+            console.log('From SceneA to SceneB');
+
+            this.scene.start('sceneB');
+
+        }, this);
+    }
+
+});
+
+var SceneB = new Phaser.Class({
+
+    Extends: Phaser.Scene,
+
+    initialize:
+
+    function SceneB ()
+    {
+        Phaser.Scene.call(this, { key: 'sceneB' });
+    },
+
+    preload: function ()
+    {
+        this.load.image('arrow', 'assets/temple1.png');
+        this.load.atlas("hoodgirl", "assets/hoodgirl.png", "assets/hoodgirl.json");
+        this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
+    },
+
+    create: function ()
+    {
+        this.arrow = this.add.sprite(400, 300, 'arrow')
+        player = this.add.sprite(100, 450, "hoodgirl", "idle001.png");
+        farmzombie = this.add.sprite(600, 450, "farmzombie", "idle001.png");
+
+        // Player animation creations
+    this.anims.create({
+        key: "hgattack",
+        frames: this.anims.generateFrameNames("hoodgirl", { 
+            prefix: "attack00", 
+            suffix: ".png",
+            start: 1,
+            end: 12 
+        }), 
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "hgidle",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "idle00",
+            suffix: ".png",
+            start: 1,
+            end: 18
+        }),
+        frameRate: 15,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: "hghurt",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "hurt00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "hgdying",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "dying00",
+            suffix: ".png",
+            start: 1,
+            end: 15
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+// Zombie animation creations
+    this.anims.create({
+        key: "fzidle",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "idle00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: "fzattack",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "attack00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "fzhurt",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "hurt00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "fzdying",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "dying00",
+            suffix: ".png",
+            start: 1,
+            end: 15
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+// when scene loads start playing idle animations for player and zombie
+    player.play("hgidle");
+    farmzombie.play("fzidle");
+
+    player.on("animationcomplete", function() {
+        player.play("hgidle");
+    });
+
+    farmzombie.on("animationcomplete", function() {
+        console.log(this.anims.currentAnim.key);
+        if (this.anims.currentAnim.key == "fzdying") {
+            this.anims.pause();
+        } else {
+            farmzombie.play("fzidle");
+        }
+    });
+
+
+        this.input.once('pointerdown', function (event) {
+
+            console.log('From SceneB to SceneC');
+
+            this.scene.start('sceneC');
+
+        }, this);
+    },
+});
+
+var SceneC = new Phaser.Class({
+
+    Extends: Phaser.Scene,
+
+    initialize:
+
+    function SceneC ()
+    {
+        Phaser.Scene.call(this, { key: 'sceneC' });
+    },
+
+    preload: function ()
+    {
+        this.load.image('mech', 'assets/temple2.png');
+        this.load.atlas("hoodgirl", "assets/hoodgirl.png", "assets/hoodgirl.json");
+        this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
+    },
+
+    create: function ()
+    {
+        this.add.sprite(400, 300, 'mech')
+        player = this.add.sprite(100, 450, "hoodgirl", "idle001.png");
+        farmzombie = this.add.sprite(600, 450, "farmzombie", "idle001.png");
+
+        // Player animation creations
+    this.anims.create({
+        key: "hgattack",
+        frames: this.anims.generateFrameNames("hoodgirl", { 
+            prefix: "attack00", 
+            suffix: ".png",
+            start: 1,
+            end: 12 
+        }), 
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "hgidle",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "idle00",
+            suffix: ".png",
+            start: 1,
+            end: 18
+        }),
+        frameRate: 15,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: "hghurt",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "hurt00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "hgdying",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "dying00",
+            suffix: ".png",
+            start: 1,
+            end: 15
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+// Zombie animation creations
+    this.anims.create({
+        key: "fzidle",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "idle00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: "fzattack",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "attack00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "fzhurt",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "hurt00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "fzdying",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "dying00",
+            suffix: ".png",
+            start: 1,
+            end: 15
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+// when scene loads start playing idle animations for player and zombie
+    player.play("hgidle");
+    farmzombie.play("fzidle");
+
+    player.on("animationcomplete", function() {
+        player.play("hgidle");
+    });
+
+    farmzombie.on("animationcomplete", function() {
+        console.log(this.anims.currentAnim.key);
+        if (this.anims.currentAnim.key == "fzdying") {
+            this.anims.pause();
+        } else {
+            farmzombie.play("fzidle");
+        }
+    });
+
+
+        this.input.once('pointerdown', function (event) {
+
+            console.log('From SceneC to SceneA');
+
+            this.scene.start('sceneA');
+
+        }, this);
+    }
+
+});
+
+var config = {
+    type: Phaser.AUTO,
+    parent: "phaser-example",
+    width: 800,
+    height: 600,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 },
+            debug: false
+        }
+    },
+
+    scene: [ SceneA, SceneB, SceneC ]
+    // scene: {
+    //     preload: preload,
+    //     create: create,
+    //     update: update
+    // }
+};
+
+var player;
+var cursors;
+var farmzombie;
+var keydown = false;
+var playerhealth = 10;
+var farmzombiehealth = 10;
+
+var game = new Phaser.Game(config);
+
+function preload() {
+    this.load.atlas("hoodgirl", "assets/hoodgirl.png", "assets/hoodgirl.json");
+    this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
+    // this.load.image("volcano", "assets/volcano.png");
+}
+
+function create() {
+    // this.add.image(400, 300, "volcano");
+    player = this.add.sprite(100, 450, "hoodgirl", "idle001.png");
+    farmzombie = this.add.sprite(600, 450, "farmzombie", "idle001.png");
+
+// Player animation creations
+    this.anims.create({
+        key: "hgattack",
+        frames: this.anims.generateFrameNames("hoodgirl", { 
+            prefix: "attack00", 
+            suffix: ".png",
+            start: 1,
+            end: 12 
+        }), 
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "hgidle",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "idle00",
+            suffix: ".png",
+            start: 1,
+            end: 18
+        }),
+        frameRate: 15,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: "hghurt",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "hurt00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "hgdying",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "dying00",
+            suffix: ".png",
+            start: 1,
+            end: 15
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+// Zombie animation creations
+    this.anims.create({
+        key: "fzidle",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "idle00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: "fzattack",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "attack00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "fzhurt",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "hurt00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "fzdying",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "dying00",
+            suffix: ".png",
+            start: 1,
+            end: 15
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+// when scene loads start playing idle animations for player and zombie
+    player.play("hgidle");
+    farmzombie.play("fzidle");
+
+    player.on("animationcomplete", function() {
+        player.play("hgidle");
+    });
+
+    farmzombie.on("animationcomplete", function() {
+        console.log(this.anims.currentAnim.key);
+        if (this.anims.currentAnim.key == "fzdying") {
             this.anims.pause();
         } else {
             farmzombie.play("fzidle");
@@ -231,6 +607,18 @@ function create() {
     });
 
     cursors = this.input.keyboard.createCursorKeys()
+    
+    // var config = {
+    //     type: Phaser.AUTO,
+    //     width: 800,
+    //     height: 600,
+    //     backgroundColor: '#000000',
+    //     parent: 'phaser-example',
+    //     scene: [ SceneA, SceneB, SceneC ]
+    // };
+    
+    // var game = new Phaser.Game(config);
+    
 }
 
 function update() {
@@ -253,20 +641,9 @@ document.addEventListener("keypress", function(event) {
 function hgAttack() {
     keydown = true;
     player.anims.play("hgattack", true);
-    
-    var evasionGenerate = Math.floor(Math.random() * 100);
-    if (evasionGenerate > fzEvasionStat) {
-        var zombieDefense = Math.floor(Math.random() * fzDefenseStat) + 1;
-        var playerAttack = Math.floor(Math.random() * hgAttackStat) + 10;
-        farmzombiehealth -= Math.floor(Math.random() * (playerAttack - zombieDefense)) + 1;
-        console.log("Z Hit current zombie health is " + farmzombiehealth);
-    } else {
-        farmzombiehealth -= 0
-        console.log("Z Evade")
-    }
-
-    // console.log("current zombie health is " + farmzombiehealth);
-    if (farmzombiehealth <= 0) {
+    farmzombiehealth = farmzombiehealth - 2;
+    console.log("current zombie health is " + farmzombiehealth);
+    if (farmzombiehealth === 0) {
         setTimeout(function() {
             farmzombie.anims.play("fzdying", true)
         }, 200);
@@ -280,19 +657,8 @@ function hgAttack() {
 
 function fzAttack() {
     farmzombie.anims.play("fzattack", true);
-    // 
-    var evasionGenerate = Math.floor(Math.random() * 100);
-    if (evasionGenerate > hgEvasionStat) {
-        var zombieAttack = Math.floor(Math.random() * fzAttackStat) + 10;
-        var playerDefense = Math.floor(Math.random() * hgDefenseStat) + 1;
-        playerhealth -= Math.floor(Math.random() * (zombieAttack - playerDefense)) + 1;
-        console.log("Hg Hit current player health is " + playerhealth);  
-    } else {
-        playerhealth -= 0
-        console.log("Hg evade")
-    }
-
-    // console.log("current player health is " + playerhealth);  
+    playerhealth = playerhealth - 1;  
+    console.log("current player health is " + playerhealth);  
     if (playerhealth === 0) {
         setTimeout(function() {
             player.anims.play("hgdying", true)
