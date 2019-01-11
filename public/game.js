@@ -20,6 +20,8 @@ var player;
 var cursors;
 var farmzombie;
 var keydown = false;
+var playerhealth = 10;
+var farmzombiehealth = 10;
 
 var game = new Phaser.Game(config);
 
@@ -34,7 +36,7 @@ function create() {
     player = this.add.sprite(100, 450, "hoodgirl", "idle001.png");
     farmzombie = this.add.sprite(600, 450, "farmzombie", "idle001.png");
 
-
+// Player animation creations
     this.anims.create({
         key: "hgattack",
         frames: this.anims.generateFrameNames("hoodgirl", { 
@@ -60,6 +62,31 @@ function create() {
     });
 
     this.anims.create({
+        key: "hghurt",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "hurt00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+    this.anims.create({
+        key: "hgdying",
+        frames: this.anims.generateFrameNames("hoodgirl", {
+            prefix: "dying00",
+            suffix: ".png",
+            start: 1,
+            end: 15
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+// Zombie animation creations
+    this.anims.create({
         key: "fzidle",
         frames: this.anims.generateFrameNames("farmzombie", {
             prefix: "idle00",
@@ -69,6 +96,18 @@ function create() {
         }),
         frameRate: 10,
         repeat: -1
+    });
+
+    this.anims.create({
+        key: "fzattack",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "attack00",
+            suffix: ".png",
+            start: 1,
+            end: 12
+        }),
+        frameRate: 20,
+        repeat: 0
     });
 
     this.anims.create({
@@ -83,13 +122,33 @@ function create() {
         repeat: 0
     });
 
+    this.anims.create({
+        key: "fzdying",
+        frames: this.anims.generateFrameNames("farmzombie", {
+            prefix: "dying00",
+            suffix: ".png",
+            start: 1,
+            end: 15
+        }),
+        frameRate: 20,
+        repeat: 0
+    });
+
+// when scene loads start playing idle animations for player and zombie
     player.play("hgidle");
     farmzombie.play("fzidle");
 
     player.on("animationcomplete", function() {
-        console.log("COMPLEEETE")
         player.play("hgidle");
-        farmzombie.play("fzidle");
+    });
+
+    farmzombie.on("animationcomplete", function() {
+        console.log(this.anims.currentAnim.key);
+        if (this.anims.currentAnim.key == "fzdying") {
+            this.anims.pause();
+        } else {
+            farmzombie.play("fzidle");
+        }
     });
 
     cursors = this.input.keyboard.createCursorKeys()
@@ -107,14 +166,40 @@ document.addEventListener("keypress", function(event) {
     if (keydown) {
         return false;
     }
-    console.log(event.key);
     if (event.key === "h" || event.key === "H") {
-        console.log("H WAS PRESSED YAY");
-        player.anims.play("hgattack", true);
-        farmzombie.anims.play("fzhurt", true);
-        keydown = true;
-        setTimeout(function() {
-            keydown = false;
-        }, 3000);
+        hgAttack();
     }
 });
+
+function hgAttack() {
+    keydown = true;
+    player.anims.play("hgattack", true);
+    farmzombiehealth = farmzombiehealth - 2;
+    console.log("current zombie health is " + farmzombiehealth);
+    if (farmzombiehealth === 0) {
+        setTimeout(function() {
+            farmzombie.anims.play("fzdying", true)
+        }, 200);
+    } else {
+        setTimeout(function() {
+            farmzombie.anims.play("fzhurt", true);
+        }, 200);
+        setTimeout(fzAttack, 1000);
+    }
+}
+
+function fzAttack() {
+    farmzombie.anims.play("fzattack", true);
+    playerhealth = playerhealth - 1;  
+    console.log("current player health is " + playerhealth);  
+    if (playerhealth === 0) {
+        setTimeout(function() {
+            player.anims.play("hgdying", true)
+        }, 200);
+    } else {
+        player.anims.play("hghurt", true);
+        setTimeout(function() {
+            keydown = false;
+        }, 500);
+    }
+}

@@ -1,7 +1,7 @@
 // Requiring our models and passport as we've configured it
 var db = require("../models");
 var passport = require("../config/passport");
-
+var speech = require("../public/js/dialogue");
 module.exports = function(app) {
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
@@ -38,6 +38,11 @@ module.exports = function(app) {
   app.get("/logout", function(req, res) {
     req.logout();
     res.redirect("/");
+  });
+
+  // Dialogue export, added by Erich
+  app.get("/api/speech", function (req, res) {
+    res.json(speech);
   });
 
   // Route for getting some data about our user to be used client side

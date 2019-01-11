@@ -20,11 +20,13 @@ app.use(session({ secret: "keyboard cat", resave: true, saveUninitialized: true 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Handlebars
 
 // Routes/Requiring our routes
 require("./routes/htmlRoutes.js")(app);
 require("./routes/apiRoutes.js")(app);
+
+// needed to grab JSON, added by Erich to require the dialogue API 
+require("./routes/apiroutes")(app);
 
 if (process.env.NODE_ENV === "test") {
   syncOptions.force = true;
