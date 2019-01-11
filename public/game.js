@@ -20,8 +20,14 @@ var player;
 var cursors;
 var farmzombie;
 var keydown = false;
-var playerhealth = 10;
-var farmzombiehealth = 10;
+var playerhealth = 50;
+var farmzombiehealth = 50;
+var hgAttackStat = 15;
+var fzAttackStat = 10;
+var hgDefenseStat = 5;
+var fzDefenseStat = 1;
+var hgEvasionStat = 10;
+var fzEvasionStat = 5;
 
 var game = new Phaser.Game(config);
 
@@ -143,7 +149,7 @@ function create() {
     });
 
     farmzombie.on("animationcomplete", function() {
-        console.log(this.anims.currentAnim.key);
+        // console.log(this.anims.currentAnim.key);
         if (this.anims.currentAnim.key == "fzdying") {
             this.anims.pause();
         } else {
@@ -174,9 +180,20 @@ document.addEventListener("keypress", function(event) {
 function hgAttack() {
     keydown = true;
     player.anims.play("hgattack", true);
-    farmzombiehealth = farmzombiehealth - 2;
-    console.log("current zombie health is " + farmzombiehealth);
-    if (farmzombiehealth === 0) {
+    
+    var evasionGenerate = Math.floor(Math.random() * 100);
+    if (evasionGenerate > fzEvasionStat) {
+        var zombieDefense = Math.floor(Math.random() * fzDefenseStat) + 1;
+        var playerAttack = Math.floor(Math.random() * hgAttackStat) + 10;
+        farmzombiehealth -= Math.floor(Math.random() * (playerAttack - zombieDefense));
+        console.log("Z Hit current zombie health is " + farmzombiehealth);
+    } else {
+        farmzombiehealth -= 0
+        console.log("Z Evade")
+    }
+
+    // console.log("current zombie health is " + farmzombiehealth);
+    if (farmzombiehealth <= 0) {
         setTimeout(function() {
             farmzombie.anims.play("fzdying", true)
         }, 200);
@@ -190,8 +207,19 @@ function hgAttack() {
 
 function fzAttack() {
     farmzombie.anims.play("fzattack", true);
-    playerhealth = playerhealth - 1;  
-    console.log("current player health is " + playerhealth);  
+    // 
+    var evasionGenerate = Math.floor(Math.random() * 100);
+    if (evasionGenerate > hgEvasionStat) {
+        var zombieAttack = Math.floor(Math.random() * fzAttackStat) + 10;
+        var playerDefense = Math.floor(Math.random() * hgDefenseStat) + 1;
+        playerhealth -= Math.floor(Math.random() * (zombieAttack - playerDefense));
+        console.log("Hg Hit current player health is " + playerhealth);  
+    } else {
+        playerhealth -= 0
+        console.log("Hg evade")
+    }
+
+    // console.log("current player health is " + playerhealth);  
     if (playerhealth === 0) {
         setTimeout(function() {
             player.anims.play("hgdying", true)
