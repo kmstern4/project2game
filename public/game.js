@@ -22,33 +22,32 @@ var cursors;
 var game = new Phaser.Game(config);
 
 function preload() {
-    this.load.spritesheet("hoodgirl", "assets/testspritesheet.png", { frameWidth: 200, frameHeight: 200, endFrame: 11 });
-    // this.load.spritesheet("hgidle", "assets/hgidle.png", { frameWidth: , frameHeight: , endFrame:  });
-    // this.load.spritesheet("hghurt", "assets/hghurt.png", { frameWidth: , frameHeight: , endFrame:  });
-    // this.load.spritesheet("wzattack", "assets/wzattack.png", { frameWidth: , frameHeight: , endFrame:  });
-    // this.load.spritesheet("wzidle", "assets/wzidle.png", { frameWidth: , frameHeight: , endFrame:  });
-    // this.load.spritesheet("wzhurt", "assets/wzhurt.png", { frameWidth: , frameHeight: , endFrame:  });
+    this.load.atlas("hg", "assets/hoodgirl.png", "assets/hoodgirl.json");
     this.load.image("volcano", "assets/volcano.png");
 }
 
 function create() {
     this.add.image(400, 300, "volcano");
+    player = this.add.sprite(100, 450, "hg", "idle001.png");
 
-    player = this.physics.add.sprite(100, 450, "hoodgirl");
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+
     this.anims.create({
-        key: "swing",
-        frames: this.anims.generateFrameNumbers("hoodgirl", { start: 0, end: 11, first: 0 }),
-        frameRate: 30,
+        key: "attack",
+        frames: this.anims.generateFrameNames("hg", { 
+            prefix: "attack00", 
+            suffix: ".png",
+            start: 1,
+            end: 12 
+        }), 
+        frameRate: 20,
         repeat: 0
     });
 
-    this.anims.create({
-        key: "idle",
-        frames: [ { key: "hoodgirl", frame: 0 } ],
-        frameRate: 20
+    player.on("animationupdate", function() {
+        console.log("FRAME UPDATED YO")
     });
+
+
 
     cursors = this.input.keyboard.createCursorKeys()
 }
@@ -68,8 +67,8 @@ function update() {
 
 document.addEventListener("keypress", function(event) {
     console.log(event.key);
-    if (event.key === "h") {
+    if (event.key === "h" || event.key === "H") {
         console.log("H WAS PRESSED YAY");
-        player.anims.play("swing", true);
+        player.anims.play("attack", true);
     }
 })
