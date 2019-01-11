@@ -185,7 +185,7 @@ function hgAttack() {
     if (evasionGenerate > fzEvasionStat) {
         var zombieDefense = Math.floor(Math.random() * fzDefenseStat) + 1;
         var playerAttack = Math.floor(Math.random() * hgAttackStat) + 10;
-        farmzombiehealth -= Math.floor(Math.random() * (playerAttack - zombieDefense));
+        farmzombiehealth -= Math.floor(Math.random() * (playerAttack - zombieDefense)) + 1;
         console.log("Z Hit current zombie health is " + farmzombiehealth);
     } else {
         farmzombiehealth -= 0
@@ -212,7 +212,7 @@ function fzAttack() {
     if (evasionGenerate > hgEvasionStat) {
         var zombieAttack = Math.floor(Math.random() * fzAttackStat) + 10;
         var playerDefense = Math.floor(Math.random() * hgDefenseStat) + 1;
-        playerhealth -= Math.floor(Math.random() * (zombieAttack - playerDefense));
+        playerhealth -= Math.floor(Math.random() * (zombieAttack - playerDefense)) + 1;
         console.log("Hg Hit current player health is " + playerhealth);  
     } else {
         playerhealth -= 0
