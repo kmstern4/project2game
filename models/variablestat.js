@@ -44,5 +44,12 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
   });
+  variableStat.associate = function(models){
+    variableStat.belongsTo(models.User, {
+      as: "user",
+      foriegnKey: "user_id",
+      allowNull: false
+    })
+};
   return variableStat;
 };

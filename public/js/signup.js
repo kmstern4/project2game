@@ -1,11 +1,11 @@
-$(document).ready(function() {
+$(document).ready(function () {
   // Getting references to our form and input
   var signUpForm = $("form.signup");
   var emailInput = $("input#email-input");
   var passwordInput = $("input#password-input");
 
   // When the signup button is clicked, we validate the email and password are not blank
-  signUpForm.on("submit", function(event) {
+  signUpForm.on("submit", function (event) {
     event.preventDefault();
     var userData = {
       email: emailInput.val().trim(),
@@ -27,16 +27,22 @@ $(document).ready(function() {
     $.post("/api/signup", {
       email: email,
       password: password
-    }).then(function(data) {
+    }).then(function (data) {
       console.log(data);
-      window.location.replace(data);
-    
+      if (data.errors) {
+       
+        alert(data.errors[0].message);
+      } else {
+        window.location.replace(data);
+      };
+
       // If there's an error, handle it by throwing up a bootstrap alert
-    }).catch(handleLoginErr);
+    })
   }
 
-  function handleLoginErr(err) {
-    $("#alert .msg").text(err.responseJSON);
-    $("#alert").fadeIn(500);
-  }
+  // function handleLoginErr(err) {
+  //   alert("test")
+  //   $("#alert .msg").text(err.responseJSON);
+  //   $("#alert").fadeIn(500);
+  // }
 });
