@@ -35,7 +35,12 @@ var hgDefenseStat = 5;
 var fzDefenseStat = 1;
 var hgEvasionStat = 10; //10
 var fzEvasionStat = 5; //5
+var zombieAttack = 0;
+var zombieDefense = 0;
+var playerAttack = 0;
+var playerDefense = 0;
 var special = 0;
+
 
 var game = new Phaser.Game(config);
 
@@ -351,6 +356,7 @@ function hgAttack() {
     console.log(hgevade);
         
     var evasionGenerate = Math.floor(Math.random() * 100);
+    combatRoll()
 
     if (farmzombiehealth <= 0) {
         setTimeout(function() {
@@ -364,10 +370,6 @@ function hgAttack() {
         zalphaup.restart();
         zalphadown.restart();
         setTimeout(fzAttack, 1000);
-        var zombieDefense = Math.floor(Math.random() * (fzDefenseStat - 1 + 1)) + 1;
-        console.log(zombieDefense)
-        var playerAttack = Math.floor(Math.random() * (hgAttackStat - 10 + 1)) + 10;
-        console.log(playerAttack)
         farmzombiehealth -= (playerAttack - zombieDefense);
         console.log("You hit the zombie, current zombie health is " + farmzombiehealth);
     } else { 
@@ -409,6 +411,7 @@ function fzAttack() {
     farmzombie.anims.play("fzattack", true);
     // 
     var evasionGenerate = Math.floor(Math.random() * 100);
+    combatRoll()
 
     if (playerhealth <= 0) {
         setTimeout(function() {
@@ -422,8 +425,6 @@ function fzAttack() {
         hittext.setText("Hit!");
         alphaup.restart();
         alphadown.restart();
-        var zombieAttack = Math.floor(Math.random() * (fzAttackStat - 10 + 1)) + 10;
-        var playerDefense = Math.floor(Math.random() * (hgDefenseStat - 1 + 1)) + 1;
         playerhealth -= (zombieAttack - playerDefense);
         healthText.setText('Hp: ' + playerhealth)
         console.log("Zombie hits you, current player health is " + playerhealth);
@@ -452,6 +453,13 @@ function fzAttack() {
         console.log("Hg evade")
         keydown = false;
     }
+}
+
+function combatRoll() {
+    zombieDefense = Math.floor(Math.random() * (fzDefenseStat - 1 + 1)) + 1;
+    zombieAttack = Math.floor(Math.random() * (fzAttackStat - 10 + 1)) + 10;
+    playerDefense = Math.floor(Math.random() * (hgDefenseStat - 1 + 1)) + 1;
+    playerAttack = Math.floor(Math.random() * (hgAttackStat - 10 + 1)) + 10;
 }
 
 
