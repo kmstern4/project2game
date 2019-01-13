@@ -25,14 +25,16 @@ var keydown = false;
 var textcontainer;
 var textbox;
 var text;
+var healthText;
+var enemyText;
 var playerhealth = 50;
 var farmzombiehealth = 50;
 var hgAttackStat = 15;
 var fzAttackStat = 10;
 var hgDefenseStat = 5;
 var fzDefenseStat = 1;
-var hgEvasionStat = 20; //10
-var fzEvasionStat = 20; //5
+var hgEvasionStat = 10; //10
+var fzEvasionStat = 5; //5
 
 var game = new Phaser.Game(config);
 
@@ -50,6 +52,7 @@ function create() {
     text.visible = false; // hiding text on page load
     player = this.add.sprite(-100, 450, "hoodgirl", "idle001.png"); 
     farmzombie = this.add.sprite(900, 450, "farmzombie", "idle001.png");
+    healthText = this.add.text(16, 16, 'Hp: ' + playerhealth, { fontSize: '32px', fill: '#800000' });
     hittext = this.add.text(260, 380, "", { color: "#ff3434", fontSize: 20 });
     hittext.setAlpha(0);
     hittext.setFontStyle("bold");
@@ -339,6 +342,7 @@ function hgAttack() {
     console.log(hgevade);
         
     var evasionGenerate = Math.floor(Math.random() * 100);
+
     if (farmzombiehealth <= 0) {
         setTimeout(function() {
             farmzombie.anims.play("fzdying", true)
@@ -351,11 +355,13 @@ function hgAttack() {
         zalphaup.restart();
         zalphadown.restart();
         setTimeout(fzAttack, 1000);
-        var zombieDefense = Math.floor(Math.random() * fzDefenseStat) + 1;
-        var playerAttack = Math.floor(Math.random() * hgAttackStat) + 10;
-        farmzombiehealth -= Math.floor(Math.random() * (playerAttack - zombieDefense)) + 1;
-        console.log("Z Hit current zombie health is " + farmzombiehealth);
-    } else {
+        var zombieDefense = Math.floor(Math.random() * (fzDefenseStat - 1 + 1)) + 1;
+        console.log(zombieDefense)
+        var playerAttack = Math.floor(Math.random() * (hgAttackStat - 10 + 1)) + 10;
+        console.log(playerAttack)
+        farmzombiehealth -= (playerAttack - zombieDefense);
+        console.log("You hit the zombie, current zombie health is " + farmzombiehealth);
+    } else { 
         farmzombie.anims.play("fzrunning", true);
         fzevade.restart();
         zombietext.setText("Miss!");
@@ -372,7 +378,7 @@ function fzAttack() {
     // 
     var evasionGenerate = Math.floor(Math.random() * 100);
 
-    if (playerhealth === 0) {
+    if (playerhealth <= 0) {
         setTimeout(function() {
             player.anims.play("hgdying", true)
         }, 200);
@@ -384,10 +390,25 @@ function fzAttack() {
         hittext.setText("Hit!");
         alphaup.restart();
         alphadown.restart();
-        var zombieAttack = Math.floor(Math.random() * fzAttackStat) + 10;
-        var playerDefense = Math.floor(Math.random() * hgDefenseStat) + 1;
-        playerhealth -= Math.floor(Math.random() * (zombieAttack - playerDefense)) + 1;
-        console.log("Hg Hit current player health is " + playerhealth);  
+        var zombieAttack = Math.floor(Math.random() * (fzAttackStat - 10 + 1)) + 10;
+        var playerDefense = Math.floor(Math.random() * (hgDefenseStat - 1 + 1)) + 1;
+        playerhealth -= (zombieAttack - playerDefense);
+        healthText.setText('Hp: ' + playerhealth)
+        console.log("Zombie hits you, current player health is " + playerhealth);
+        
+        var updates = {
+            hp: playerhealth,
+            defense: hgDefenseStat,
+            evasion: hgEvasionStat,
+            attack: hgAttackStat,
+        }
+        
+        $.ajax({
+            type: "PUT",
+            url: "/api/update",
+            data: updates,
+        });
+
     } else {
         player.anims.play("hgrunning", true);
         hgevade.restart();
