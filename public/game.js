@@ -32,6 +32,16 @@ var hgDefenseStat = 5;
 var fzDefenseStat = 1;
 var hgEvasionStat = 10;
 var fzEvasionStat = 5;
+var textFormat = {
+    font: "13px Gabriella",
+    // fill: "#ffffff",
+    align: "center",
+    wordWrap: {width: 350}, 
+};
+var storyText;
+var storyText2;
+var storyText3;
+var storyText4;
 
 var game = new Phaser.Game(config);
 
@@ -40,6 +50,14 @@ function preload() {
     this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
     this.load.image("volcano", "assets/volcano.png");
     this.load.image("textbox", "assets/600wguibox.png");
+    // ajax call to grab dialogue
+    $.ajax({
+        method: 'GET',
+        url: '/api/speech'
+    }).then(function (response) {
+        dialogue = response;
+        console.log(dialogue);
+    })
 }
 
 function create() {
@@ -50,9 +68,21 @@ function create() {
     player = this.add.sprite(-100, 450, "hoodgirl", "idle001.png");
     farmzombie = this.add.sprite(900, 450, "farmzombie", "idle001.png");
 
+// Narration variables
+    storyText = this.add.text(-170, -30, dialogue[0].narration.scene1A, textFormat);
+    storyText2 = this.add.text(-170, -30, dialogue[0].narration.scene1B, textFormat);
+    storyText3 = this.add.text(-170, -30, dialogue[0].narration.scene1C, textFormat);
+    storyText4 = this.add.text(-170, -30, dialogue[0].narration.scene1D, textFormat);
+
+// Hiding text until called on
+    storyText.visible = false;
+    storyText2.visible = false;
+    storyText3.visible = false;
+    storyText4.visible = false;
+
 // setting the text container
     textcontainer = this.add.container(400, 200, textbox);
-    textcontainer.visible = false;
+    textcontainer.visible = true;
 
     textcontainer.setSize(400, 100);
 
@@ -65,8 +95,7 @@ function create() {
     textcontainer.on("pointerout", function() {
         textbox.clearTint();
     });
-
-
+    
 // Tweens
     tween = this.tweens.add({
         targets: player,
@@ -236,9 +265,18 @@ function create() {
 function update() {
 
 
-
 }
 
+// Event Listener for beginning the narration
+document.addEventListener("keypress", function(event) {
+    if (keydown) {
+        return false;
+    }
+    if (event.key === "n" || event.key === "N") {
+        // storyText.visible = true;
+        timedStoryTelling();
+    }
+});
 
 
 document.addEventListener("keypress", function(event) {
@@ -247,8 +285,12 @@ document.addEventListener("keypress", function(event) {
     }
     if (event.key === "h" || event.key === "H") {
         hgAttack();
+        storyText4.visible = false;
     }
 });
+
+
+
 
 function hgAttack() {
     keydown = true;
@@ -277,6 +319,30 @@ function hgAttack() {
         setTimeout(fzAttack, 1000);
     }
 }
+
+// Narration cycle in textbox
+function timedStoryTelling() {
+    setTimeout(function () {
+        storyText.visible = true;
+        textcontainer.add(storyText);
+    }, 500);
+    setTimeout(function () {
+        storyText.visible = false;
+        storyText2.visible = true;
+        textcontainer.add(storyText2);
+    }, 5000);
+    setTimeout(function () {
+        storyText2.visible = false;
+        storyText3.visible = true;
+        textcontainer.add(storyText3);
+    }, 10000);
+    setTimeout(function () {
+        storyText3.visible = false;
+        storyText4.visible = true;
+        textcontainer.add(storyText4);
+    }, 15000);
+};
+
 
 function fzAttack() {
     farmzombie.anims.play("fzattack", true);
