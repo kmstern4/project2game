@@ -62,4 +62,12 @@ module.exports = function(app) {
     }
   });
 
+  app.put("/api/update", function (req, res) {
+    db.variableStat.update(req.body, {
+        where: { id: 1 }
+    }).then(function (updateStats) {
+        res.end();
+    })
+});
+
 };
