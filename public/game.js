@@ -35,9 +35,12 @@ var hgDefenseStat = 5;
 var fzDefenseStat = 1;
 var hgEvasionStat = 10;
 var fzEvasionStat = 5;
+var zombieAttack = 0; 
+var zombieDefense = 0; 
+var playerAttack = 0; 
+var playerDefense = 0; 
+var special = 0;
 var textFormat = {
-    font: "13px Gabriella",
-    // fill: "#ffffff",
     align: "center",
     wordWrap: {width: 350}, 
 };
@@ -45,6 +48,8 @@ var storyText;
 var storyText2;
 var storyText3;
 var storyText4;
+var storyText5;
+var beginText;
 
 var game = new Phaser.Game(config);
 
@@ -77,24 +82,28 @@ function create() {
     zombietext = this.add.text(510, 380, "", { color: "#ff3434", fontSize: 20 });
     zombietext.setAlpha(0);
     zombietext.setFontStyle("bold");
+    beginText = this.add.text(-120, -10, "Press 'n' to begin story");
+   
 
 // Narration variables
-    storyText = this.add.text(-170, -30, dialogue[0].narration.scene1A, textFormat);
-    storyText2 = this.add.text(-170, -30, dialogue[0].narration.scene1B, textFormat);
-    storyText3 = this.add.text(-170, -30, dialogue[0].narration.scene1C, textFormat);
-    storyText4 = this.add.text(-170, -30, dialogue[0].narration.scene1D, textFormat);
+    storyText = this.add.text(-170, -40, dialogue[0].narration.scene1A, textFormat);
+    storyText2 = this.add.text(-170, -40, dialogue[0].narration.scene1B, textFormat);
+    storyText3 = this.add.text(-170, -40, dialogue[0].narration.scene1C, textFormat);
+    storyText4 = this.add.text(-170, -40, dialogue[0].narration.scene1D, textFormat);
+    storyText5 = this.add.text(-170, -40, dialogue[0].narration.scene1E, textFormat);
 
 // Hiding text until called on
     storyText.visible = false;
     storyText2.visible = false;
     storyText3.visible = false;
     storyText4.visible = false;
+    storyText5.visible = false;
 
 // setting the text container
     textcontainer = this.add.container(400, 200, textbox);
     textcontainer.visible = true;
     textcontainer = this.add.container(400, 200, textbox); // creating container including textbox
-    textcontainer.visible = false; // hiding container on page load, also hides textbox
+    // textcontainer.visible = false; // hiding container on page load, also hides textbox
 
     textcontainer.setSize(400, 100); // setting container size to be inside of borders of textbox
 
@@ -108,6 +117,8 @@ function create() {
         textbox.clearTint();
     });
     
+    textcontainer.add(beginText);
+
 // Tweens
     // tween to make player walk in to view
     tween = this.tweens.add({
@@ -373,7 +384,7 @@ document.addEventListener("keypress", function(event) {
     }
     if (event.key === "a" || event.key === "A") {
         hgAttack();
-        storyText4.visible = false;
+        storyText5.visible = false;
     }
     if (event.key === "s" || event.key === "S") {
         if (special > 0) {
@@ -448,6 +459,7 @@ function hgSpecial() {
 // Narration cycle in textbox
 function timedStoryTelling() {
     setTimeout(function () {
+        beginText.visible = false;
         storyText.visible = true;
         textcontainer.add(storyText);
     }, 500);
@@ -466,6 +478,11 @@ function timedStoryTelling() {
         storyText4.visible = true;
         textcontainer.add(storyText4);
     }, 15000);
+    setTimeout(function () {
+        storyText4.visible = false;
+        storyText5.visible = true;
+        textcontainer.add(storyText5);
+    }, 20000);
 };
 
 
