@@ -53,8 +53,12 @@ function create() {
     player = this.add.sprite(-100, 450, "hoodgirl", "idle001.png"); 
     farmzombie = this.add.sprite(900, 450, "farmzombie", "idle001.png");
     healthText = this.add.text(16, 16, 'Hp: ' + playerhealth, { fontSize: '32px', fill: '#800000' });
-
-    
+    hittext = this.add.text(260, 380, "", { color: "#ff3434", fontSize: 20 });
+    hittext.setAlpha(0);
+    hittext.setFontStyle("bold");
+    zombietext = this.add.text(510, 380, "", { color: "#ff3434", fontSize: 20 });
+    zombietext.setAlpha(0);
+    zombietext.setFontStyle("bold");
 
 // setting the text container
     textcontainer = this.add.container(400, 200, textbox); // creating container including textbox
@@ -110,6 +114,34 @@ function create() {
         duration: 300,
         paused: true,
         yoyo: true
+    });
+
+    // text becomes visible
+    alphaup = this.tweens.add({
+        targets: hittext,
+        alpha: 1,
+        duration: 200
+    });
+
+    // text fades away
+    alphadown = this.tweens.add({
+        targets: hittext,
+        alpha: 0,
+        delay: 600,
+        duration: 200
+    });
+
+    zalphaup = this.tweens.add({
+        targets: zombietext,
+        alpha: 1,
+        duration: 200
+    });
+
+    zalphadown = this.tweens.add({
+        targets: zombietext,
+        alpha: 0,
+        delay: 600,
+        duration: 200
     });
 
 
@@ -319,6 +351,9 @@ function hgAttack() {
         setTimeout(function() {
             farmzombie.anims.play("fzhurt", true);
         }, 200);
+        zombietext.setText("Hit!");
+        zalphaup.restart();
+        zalphadown.restart();
         setTimeout(fzAttack, 1000);
         var zombieDefense = Math.floor(Math.random() * (fzDefenseStat - 1 + 1)) + 1;
         console.log(zombieDefense)
@@ -329,6 +364,9 @@ function hgAttack() {
     } else { 
         farmzombie.anims.play("fzrunning", true);
         fzevade.restart();
+        zombietext.setText("Miss!");
+        zalphaup.restart();
+        zalphadown.restart();
         setTimeout(fzAttack, 1000);
         farmzombiehealth -= 0;
         console.log("Z Evade");
@@ -349,6 +387,9 @@ function fzAttack() {
         setTimeout(function() {
             keydown = false;
         }, 500);
+        hittext.setText("Hit!");
+        alphaup.restart();
+        alphadown.restart();
         var zombieAttack = Math.floor(Math.random() * (fzAttackStat - 10 + 1)) + 10;
         var playerDefense = Math.floor(Math.random() * (hgDefenseStat - 1 + 1)) + 1;
         playerhealth -= (zombieAttack - playerDefense);
@@ -371,6 +412,9 @@ function fzAttack() {
     } else {
         player.anims.play("hgrunning", true);
         hgevade.restart();
+        hittext.setText("Miss!");
+        alphaup.restart();
+        alphadown.restart();
         console.log(hgevade);
         playerhealth -= 0
         console.log("Hg evade")
