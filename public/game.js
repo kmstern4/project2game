@@ -39,6 +39,8 @@ var zombieAttack = 0;
 var zombieDefense = 0;
 var playerAttack = 0;
 var playerDefense = 0;
+var special = 0;
+
 
 var game = new Phaser.Game(config);
 
@@ -335,13 +337,21 @@ document.addEventListener("keypress", function(event) {
     if (keydown) {
         return false;
     }
-    if (event.key === "h" || event.key === "H") {
+    if (event.key === "a" || event.key === "A") {
         hgAttack();
+    }
+    if (event.key === "s" || event.key === "S") {
+        if (special > 0) {
+            return false;
+        } else {
+            hgSpecial();
+        }
     }
 });
 
 function hgAttack() {
     keydown = true;
+    special = special - 1;
     player.anims.play("hgattack", true);
     console.log(hgevade);
         
@@ -371,6 +381,29 @@ function hgAttack() {
         setTimeout(fzAttack, 1000);
         farmzombiehealth -= 0;
         console.log("Z Evade");
+    }
+};
+
+function hgSpecial() {
+    keydown = true;
+    special = 2;
+    player.anims.play("hgattack", true);
+    if (farmzombiehealth <= 0) {
+        setTimeout(function() {
+            farmzombie.anims.play("fzdying", true)
+        }, 200);
+    } else {
+        setTimeout(function() {
+            farmzombie.anims.play("fzhurt", true);
+        }, 200);
+        zombietext.setText("Crit!");
+        zalphaup.restart();
+        zalphadown.restart();
+        setTimeout(fzAttack, 1000);
+        var zombieDefense = Math.floor(Math.random() * fzDefenseStat) + 1;
+        var playerAttack = (Math.floor(Math.random() * hgAttackStat) + 10) + 5;
+        farmzombiehealth -= Math.floor(Math.random() * (playerAttack - zombieDefense)) + 1;
+        console.log("Z Hit current zombie health is " + farmzombiehealth);
     }
 }
 
@@ -420,7 +453,6 @@ function fzAttack() {
         console.log("Hg evade")
         keydown = false;
     }
-
 }
 
 function combatRoll() {
