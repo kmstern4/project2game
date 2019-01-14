@@ -4,11 +4,12 @@ var speech = [
             scene1A: "Greetings Adventurer! This is an urgent letter! It bares the mark of the King of outerlands. It would not be wise to keep him waiting.",
             scene1B: "To any able bodied adventurer, Dreary cove town has not sent their taxes in nearly three months. My subjects love paying taxes, who doesn't?.",
             scene1C: "Recently there have been terrible rumors and I fear the worst! Talk of the undead has surfaced and I need you to silence these troubles.",
-            scene1D: "With haste, head to the town and investigate! If you are able to determine and fix the problem, you will be rewarded with 200 gold pieces. Time is of utmost importance here, I fear someone is trying to raise an undead army. Signed, King Erich",
+            scene1D: "With haste, head to the town and investigate! If you are able to determine and fix the problem, you will be rewarded with 200 gold pieces.", 
+            scene1E: "Time is of utmost importance here, I fear someone is trying to raise an undead army. Signed, King Erich",
             scene2A: "After a short journey you approach the outskirts of Dreary Cove and you begin to hear screaming and what sounds like battle.",
             scene2B: "As you pick up your pace, you spot a townsperson making a break for it in your direction.",
-            scene3A: "As the man takes off running, you notice another figure slowly making its' way towards you.",
-            scene3B: "Once it gets close enough, you see that although it's better looking than the old man, it's definitely a zombie.",
+            scene2C: "As the man takes off running, you notice another figure slowly making its' way towards you.",
+            scene2D: "Once it gets close enough, you see that although it's better looking than the old man, it's definitely a zombie.",
             scene4A: "As you enter the town you notice the poor conditions all around. Zombies and villagers alike litter the ground and only three structures remain standing.",
             scene4B: "You slowly enter the house ready for anything. It's nearly silent save for some rustling at the back of the house.",
             scene4C: "A small dirty child crawls out from his hiding spot.",
@@ -34,14 +35,14 @@ var speech = [
     {
         oldMan: {
             dialogue: [
-                "'What are you crazy? You’re supposed to run away!'",
+                "Old Man:'What are you crazy? You’re supposed to run away!'",
                 {
-                    Q1: "'What’s going on?'",
-                    A1: "'Zombies are overrunning Dreary Cove! Stay as far away as you can!'",
-                    Q2: "'You're just going to leave everyone behind?'",
-                    A2: "'I’m just an old man, I can’t fight zombies!'",
-                    Q3: "'Are you from Dreary Cove?'",
-                    A3: "'Obviously, are you daft?'"
+                    Q1: "Hero:'What’s going on?'",
+                    A1: "Old Man:'Zombies are overrunning Dreary Cove! Stay as far away as you can!'",
+                    Q2: "Hero:'You're just going to leave everyone behind?'",
+                    A2: "Old Man:'I’m just an old man, I can’t fight zombies!'",
+                    Q3: "Hero:'Are you from Dreary Cove?'",
+                    A3: "Old Man'Obviously, are you daft?'"
                 }
             ]
         }

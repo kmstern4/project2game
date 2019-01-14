@@ -25,14 +25,38 @@ var keydown = false;
 var textcontainer;
 var textbox;
 var text;
+var healthText;
+var enemyText;
+var potionText;
 var playerhealth = 50;
 var farmzombiehealth = 50;
 var hgAttackStat = 15;
 var fzAttackStat = 10;
 var hgDefenseStat = 5;
 var fzDefenseStat = 1;
-var hgEvasionStat = 20; //10
-var fzEvasionStat = 20; //5
+var hgEvasionStat = 10;
+var fzEvasionStat = 5;
+var zombieAttack = 0; 
+var zombieDefense = 0; 
+var playerAttack = 0; 
+var playerDefense = 0; 
+var special = 0;
+var hppotion = true;
+var textFormat = {
+    align: "center",
+    wordWrap: {width: 350}, 
+};
+var storyText;
+var storyText2;
+var storyText3;
+var storyText4;
+var storyText5;
+var storyText6;
+var storyText7;
+var storyText8;
+var storyText9;
+var beginText;
+
 
 var game = new Phaser.Game(config);
 
@@ -40,6 +64,14 @@ function preload() { // preloading all images and atlases
     this.load.atlas("hoodgirl", "assets/hoodgirl.png", "assets/hoodgirl.json");
     this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
     this.load.image("textbox", "assets/600wguibox.png");
+    // ajax call to grab dialogue
+    $.ajax({
+        method: 'GET',
+        url: '/api/speech'
+    }).then(function (response) {
+        dialogue = response;
+        console.log(dialogue);
+    })
     this.load.image("forest", "assets/forest.png");
 }
 
@@ -50,16 +82,49 @@ function create() {
     text.visible = false; // hiding text on page load
     player = this.add.sprite(-100, 450, "hoodgirl", "idle001.png"); 
     farmzombie = this.add.sprite(900, 450, "farmzombie", "idle001.png");
+    healthText = this.add.text(16, 16, 'Hp: ' + playerhealth, { fontSize: '32px', color: '#D3D3D3', stroke: '#000000', strokeThickness: .5});
+    potionText = this.add.text(192, 16, 'Potions: 1', {fontSize: '32px', color: '#D3D3D3', stroke: '#000000', strokeThickness: .5});
+    enemyText = this.add.text(512, 552, 'Enemy Hp: ' + farmzombiehealth, { fontSize: '32px', color: '#D3D3D3', stroke: '#000000', strokeThickness: .5});
     hittext = this.add.text(260, 380, "", { color: "#ff3434", fontSize: 20 });
     hittext.setAlpha(0);
     hittext.setFontStyle("bold");
     zombietext = this.add.text(510, 380, "", { color: "#ff3434", fontSize: 20 });
     zombietext.setAlpha(0);
     zombietext.setFontStyle("bold");
+    beginText = this.add.text(-120, -10, "Press 'n' to begin story");
+   
+
+// Narration variables
+    // Story intro scene
+    storyText = this.add.text(-170, -40, dialogue[0].narration.scene1A, textFormat);
+    storyText2 = this.add.text(-170, -40, dialogue[0].narration.scene1B, textFormat);
+    storyText3 = this.add.text(-170, -40, dialogue[0].narration.scene1C, textFormat);
+    storyText4 = this.add.text(-170, -40, dialogue[0].narration.scene1D, textFormat);
+    storyText5 = this.add.text(-170, -40, dialogue[0].narration.scene1E, textFormat);
+    // Old man zombie scene
+    storyText6 = this.add.text(-170, -40, dialogue[0].narration.scene2A, textFormat);
+    storyText7 = this.add.text(-170, -40, dialogue[0].narration.scene2B, textFormat);
+    storyText8 = this.add.text(-170, -40, dialogue[0].narration.scene2C, textFormat);
+    storyText9 = this.add.text(-170, -40, dialogue[0].narration.scene2D, textFormat);
+   
+
+// Hiding text until called on
+    storyText.visible = false;
+    storyText2.visible = false;
+    storyText3.visible = false;
+    storyText4.visible = false;
+    storyText5.visible = false;
+
+    storyText6.visible = false;
+    storyText7.visible = false;
+    storyText8.visible = false;
+    storyText9.visible = false;
 
 // setting the text container
+    textcontainer = this.add.container(400, 200, textbox);
+    textcontainer.visible = true;
     textcontainer = this.add.container(400, 200, textbox); // creating container including textbox
-    textcontainer.visible = false; // hiding container on page load, also hides textbox
+    // textcontainer.visible = false; // hiding container on page load, also hides textbox
 
     textcontainer.setSize(400, 100); // setting container size to be inside of borders of textbox
 
@@ -72,7 +137,8 @@ function create() {
     textcontainer.on("pointerout", function() {
         textbox.clearTint();
     });
-
+    
+    textcontainer.add(beginText);
 
 // Tweens
     // tween to make player walk in to view
@@ -319,26 +385,52 @@ function create() {
 function update() {
 // function that will run 60 times per minute
 
-
 }
 
+// Event Listener for beginning the narration
+document.addEventListener("keypress", function(event) {
+    if (keydown) {
+        return false;
+    }
+    if (event.key === "n" || event.key === "N") {
+        // storyText.visible = true;
+        timedStoryTelling2();
+    }
+});
 
 
 document.addEventListener("keypress", function(event) {
     if (keydown) {
         return false;
     }
-    if (event.key === "h" || event.key === "H") {
+    if (event.key === "a" || event.key === "A") {
         hgAttack();
+        storyText9.visible = false;
+    }
+    if (event.key === "s" || event.key === "S") {
+        if (special > 0) {
+            return false;
+        } else {
+            hgSpecial();
+        }
+    }
+    if (event.key === "h" || event.key === "H") {
+        usePotion();
     }
 });
 
+
+
+
 function hgAttack() {
     keydown = true;
+    special = special - 1;
     player.anims.play("hgattack", true);
     console.log(hgevade);
         
     var evasionGenerate = Math.floor(Math.random() * 100);
+    combatRoll()
+
     if (farmzombiehealth <= 0) {
         setTimeout(function() {
             farmzombie.anims.play("fzdying", true)
@@ -351,11 +443,10 @@ function hgAttack() {
         zalphaup.restart();
         zalphadown.restart();
         setTimeout(fzAttack, 1000);
-        var zombieDefense = Math.floor(Math.random() * fzDefenseStat) + 1;
-        var playerAttack = Math.floor(Math.random() * hgAttackStat) + 10;
-        farmzombiehealth -= Math.floor(Math.random() * (playerAttack - zombieDefense)) + 1;
-        console.log("Z Hit current zombie health is " + farmzombiehealth);
-    } else {
+        farmzombiehealth -= (playerAttack - zombieDefense);
+        console.log("You hit the zombie, current zombie health is " + farmzombiehealth);
+        enemyText.setText('Enemy Hp: ' + farmzombiehealth)
+    } else { 
         farmzombie.anims.play("fzrunning", true);
         fzevade.restart();
         zombietext.setText("Miss!");
@@ -365,41 +456,161 @@ function hgAttack() {
         farmzombiehealth -= 0;
         console.log("Z Evade");
     }
+};
+
+function hgSpecial() {
+    keydown = true;
+    special = 2;
+    player.anims.play("hgattack", true);
+    combatRoll()
+    if (farmzombiehealth <= 0) {
+        setTimeout(function() {
+            farmzombie.anims.play("fzdying", true)
+        }, 200);
+    } else {
+        setTimeout(function() {
+            farmzombie.anims.play("fzhurt", true);
+        }, 200);
+        zombietext.setText("Crit!");
+        zalphaup.restart();
+        zalphadown.restart();
+        setTimeout(fzAttack, 1000);
+        farmzombiehealth -= ((playerAttack * 1.5) - zombieDefense)
+        console.log("Z Hit current zombie health is " + farmzombiehealth);
+        enemyText.setText('Enemy Hp: ' + farmzombiehealth)
+    }
 }
+
+// Narration cycle in textbox
+    // Intro Story
+function timedStoryTelling1() {
+    setTimeout(function () {
+        beginText.visible = false;
+        storyText.visible = true;
+        textcontainer.add(storyText);
+    }, 500);
+    setTimeout(function () {
+        storyText.visible = false;
+        storyText2.visible = true;
+        textcontainer.add(storyText2);
+    }, 8000);
+    setTimeout(function () {
+        storyText2.visible = false;
+        storyText3.visible = true;
+        textcontainer.add(storyText3);
+    }, 16000);
+    setTimeout(function () {
+        storyText3.visible = false;
+        storyText4.visible = true;
+        textcontainer.add(storyText4);
+    }, 24000);
+    setTimeout(function () {
+        storyText4.visible = false;
+        storyText5.visible = true;
+        textcontainer.add(storyText5);
+    }, 32000);
+};
+
+    // Old man story
+function timedStoryTelling2() {
+    setTimeout(function () {
+        beginText.visible = false;
+        storyText6.visible = true;
+        textcontainer.add(storyText6);
+    }, 500);
+    setTimeout(function () {
+        storyText6.visible = false;
+        storyText7.visible = true;
+        textcontainer.add(storyText7);
+    }, 8000);
+    setTimeout(function () {
+        storyText7.visible = false;
+        storyText8.visible = true;
+        textcontainer.add(storyText8);
+    }, 16000);
+    setTimeout(function () {
+        storyText8.visible = false;
+        storyText9.visible = true;
+        textcontainer.add(storyText9);
+    }, 24000);
+};
+
 
 function fzAttack() {
-    farmzombie.anims.play("fzattack", true);
-    // 
-    var evasionGenerate = Math.floor(Math.random() * 100);
-
-    if (playerhealth === 0) {
+    if (farmzombiehealth <= 0) {
         setTimeout(function() {
-            player.anims.play("hgdying", true)
+            farmzombie.anims.play("fzdying", true)
         }, 200);
-    } else if (evasionGenerate > hgEvasionStat) {
-        player.anims.play("hghurt", true);
-        setTimeout(function() {
-            keydown = false;
-        }, 500);
-        hittext.setText("Hit!");
-        alphaup.restart();
-        alphadown.restart();
-        var zombieAttack = Math.floor(Math.random() * fzAttackStat) + 10;
-        var playerDefense = Math.floor(Math.random() * hgDefenseStat) + 1;
-        playerhealth -= Math.floor(Math.random() * (zombieAttack - playerDefense)) + 1;
-        console.log("Hg Hit current player health is " + playerhealth);  
     } else {
-        player.anims.play("hgrunning", true);
-        hgevade.restart();
-        hittext.setText("Miss!");
-        alphaup.restart();
-        alphadown.restart();
-        console.log(hgevade);
-        playerhealth -= 0
-        console.log("Hg evade")
-        keydown = false;
-    }
+        farmzombie.anims.play("fzattack", true);
+        
+        var evasionGenerate = Math.floor(Math.random() * 100);
+        combatRoll()
 
+        if (playerhealth <= 0) {
+            setTimeout(function() {
+                player.anims.play("hgdying", true)
+            }, 200);
+        } else if (evasionGenerate > hgEvasionStat) {
+            player.anims.play("hghurt", true);
+            setTimeout(function() {
+                keydown = false;
+            }, 500);
+            hittext.setText("Hit!");
+            alphaup.restart();
+            alphadown.restart();
+            playerhealth -= (zombieAttack - playerDefense);
+            healthText.setText('Hp: ' + playerhealth)
+            console.log("Zombie hits you, current player health is " + playerhealth);
+            
+            var updates = {
+                hp: playerhealth,
+                defense: hgDefenseStat,
+                evasion: hgEvasionStat,
+                attack: hgAttackStat,
+            }
+            
+            $.ajax({
+                type: "PUT",
+                url: "/api/update",
+                data: updates,
+            });
+
+        } else {
+            player.anims.play("hgrunning", true);
+            hgevade.restart();
+            hittext.setText("Miss!");
+            alphaup.restart();
+            alphadown.restart();
+            console.log(hgevade);
+            playerhealth -= 0
+            console.log("Hg evade")
+            keydown = false;
+        }
+    } 
 }
+
+function combatRoll() {
+    zombieDefense = Math.floor(Math.random() * (fzDefenseStat - 1 + 1)) + 1;
+    zombieAttack = Math.floor(Math.random() * (fzAttackStat - 10 + 1)) + 10;
+    playerDefense = Math.floor(Math.random() * (hgDefenseStat - 1 + 1)) + 1;
+    playerAttack = Math.floor(Math.random() * (hgAttackStat - 10 + 1)) + 10;
+}
+
+function usePotion () {
+    if (hppotion === true) {
+        playerhealth += 25
+        healthText.setText('Hp: ' + playerhealth)
+        potionText.setText('Potions: 0')
+        hppotion = false
+    }
+}
+
+
+
+
+
+
+
 
 
