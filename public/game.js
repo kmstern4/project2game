@@ -40,6 +40,7 @@ var zombieDefense = 0;
 var playerAttack = 0; 
 var playerDefense = 0; 
 var special = 0;
+var hppotion = true;
 var textFormat = {
     align: "center",
     wordWrap: {width: 350}, 
@@ -50,6 +51,7 @@ var storyText3;
 var storyText4;
 var storyText5;
 var beginText;
+
 
 var game = new Phaser.Game(config);
 
@@ -393,6 +395,9 @@ document.addEventListener("keypress", function(event) {
             hgSpecial();
         }
     }
+    if (event.key === "h" || event.key === "H") {
+        usePotion();
+    }
 });
 
 
@@ -488,7 +493,7 @@ function timedStoryTelling() {
 
 function fzAttack() {
     farmzombie.anims.play("fzattack", true);
-    // 
+    
     var evasionGenerate = Math.floor(Math.random() * 100);
     combatRoll()
 
@@ -540,5 +545,16 @@ function combatRoll() {
     playerDefense = Math.floor(Math.random() * (hgDefenseStat - 1 + 1)) + 1;
     playerAttack = Math.floor(Math.random() * (hgAttackStat - 10 + 1)) + 10;
 }
+
+function usePotion () {
+    if (hppotion === true) {
+        playerhealth += 25
+        healthText.setText('Hp: ' + playerhealth)
+        hppotion = false
+    }
+}
+
+
+
 
 
