@@ -2,31 +2,57 @@
 <html lang="en">
 
 <head>
-  <title>Passport Authentication</title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css">
-  <link href="stylesheets/styles.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles/styles.css">
+  <title>Register</title>
 </head>
 
 <body>
-  <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="/logout">
-        Logout
-      </a>
-    </div>
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper #424242 grey darken-3 black-text">
+        <a href="/members" class="brand-logo left">Home</a>
+        <ul class="right">
+          <li><a class="navbar-brand" href="/logout">
+              Logout
+            </a>
+        </ul>
+      </div>
+    </nav>
   </div>
-</nav>
+  </nav>
   <div class="container">
     <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <h2>Welcome <span class="member-name"></span></h2>
-        <button class="startBtn" id="startBtn"><a href="/game">Start Playing</a></button>
+        <h1 class="header center">Welcome <span class="member-name"></span></h1>
       </div>
     </div>
   </div>
+  <div id="index-banner" class="main-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <div class="row center">
+          <img src="assets/600wguibox.png" alt="text box">
+        </div>
+        <div class="row center">
+            
+            <a href="/game" id="startBtn" class="btn-large waves-effect waves-light" >Play!</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="js/members.js"></script>
