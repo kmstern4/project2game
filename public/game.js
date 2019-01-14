@@ -513,6 +513,8 @@ this.input.once('pointerdown', function () {
 });
 
 
+
+// House scene
 var SceneB = new Phaser.Class({
     Extends: Phaser.Scene,
     initialize:
