@@ -27,6 +27,7 @@ var textbox;
 var text;
 var healthText;
 var enemyText;
+var potionText;
 var playerhealth = 50;
 var farmzombiehealth = 50;
 var hgAttackStat = 15;
@@ -81,7 +82,9 @@ function create() {
     text.visible = false; // hiding text on page load
     player = this.add.sprite(-100, 450, "hoodgirl", "idle001.png"); 
     farmzombie = this.add.sprite(900, 450, "farmzombie", "idle001.png");
-    healthText = this.add.text(16, 16, 'Hp: ' + playerhealth, { fontSize: '32px', fill: '#800000' });
+    healthText = this.add.text(16, 16, 'Hp: ' + playerhealth, { fontSize: '32px', color: '#D3D3D3', stroke: '#000000', strokeThickness: .5});
+    potionText = this.add.text(192, 16, 'Potions: 1', {fontSize: '32px', color: '#D3D3D3', stroke: '#000000', strokeThickness: .5});
+    enemyText = this.add.text(512, 552, 'Enemy Hp: ' + farmzombiehealth, { fontSize: '32px', color: '#D3D3D3', stroke: '#000000', strokeThickness: .5});
     hittext = this.add.text(260, 380, "", { color: "#ff3434", fontSize: 20 });
     hittext.setAlpha(0);
     hittext.setFontStyle("bold");
@@ -442,6 +445,7 @@ function hgAttack() {
         setTimeout(fzAttack, 1000);
         farmzombiehealth -= (playerAttack - zombieDefense);
         console.log("You hit the zombie, current zombie health is " + farmzombiehealth);
+        enemyText.setText('Enemy Hp: ' + farmzombiehealth)
     } else { 
         farmzombie.anims.play("fzrunning", true);
         fzevade.restart();
@@ -473,6 +477,7 @@ function hgSpecial() {
         setTimeout(fzAttack, 1000);
         farmzombiehealth -= ((playerAttack * 1.5) - zombieDefense)
         console.log("Z Hit current zombie health is " + farmzombiehealth);
+        enemyText.setText('Enemy Hp: ' + farmzombiehealth)
     }
 }
 
@@ -596,6 +601,7 @@ function usePotion () {
     if (hppotion === true) {
         playerhealth += 25
         healthText.setText('Hp: ' + playerhealth)
+        potionText.setText('Potions: 0')
         hppotion = false
     }
 }
