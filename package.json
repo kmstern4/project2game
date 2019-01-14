@@ -13,6 +13,7 @@
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
+    "materialize-css": "^1.0.0-rc.2",
     "mysql": "^2.16.0",
     "mysql2": "^1.6.4",
     "passport": "^0.4.0",

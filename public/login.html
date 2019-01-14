@@ -2,43 +2,75 @@
 <html lang="en">
 
 <head>
-  <title>Passport Authentication</title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css">
-  <link href="stylesheets/styles.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles/styles.css">
+  <title>Login</title>
 </head>
 
 <body>
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper #424242 grey darken-3 black-text">
+        <a href="/" class="brand-logo left">Home</a>
+        <ul class="right">
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Register</a></li>
+        </ul>
       </div>
-    </div>
-  </nav>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <h2>Login Form</h2>
-        <form class="login">
-          <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="email-input" placeholder="Email">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="password-input" placeholder="Password">
-          </div>
-          <button type="submit" class="btn btn-default">Login</button>
-        </form>
-        <br />
-        <p>Or sign up <a href="/signup">here</a></p>
-      </div>
-    </div>
+    </nav>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript" src="js/login.js"></script>
+  <div id="index-banner" class="main-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center">Medieval Zombies</h1>
+        <div class="row center">
+          <img src="assets/600wguibox.png" alt="text box">
+        </div>
+        <div class="row center">
+          <!-- Button to open the modal login form -->
+          <button onclick="document.getElementById('id01').style.display='block'"class="btn-large waves-effect waves-light" id="loginBtn">Login</button>
+
+          <!-- The Modal -->
+          <div id="id01" class="modal">
+            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+            
+            <!-- Modal Content -->
+            <form class="login modal-content animate">
+              <div class="imgcontainer">
+              </div>
+              <div class="container">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="email-input" placeholder="Email" required>
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="password-input" placeholder="Password" required>
+                <button type="submit" class="btn btn-default">Login</button>
+              </div>
+              <br>
+              <div class="cancelContainer">
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="waves-effect waves-light btn-small" id="cancelBtn">Cancel</button>
+                <p id="loginText">Or sign up <a href="/signup">here</a></p>
+              </div>
+            </form>
+          </div>
+          <br><br>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
 
 </body>
 
