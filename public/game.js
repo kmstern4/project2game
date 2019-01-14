@@ -442,6 +442,7 @@ function hgSpecial() {
     keydown = true;
     special = 2;
     player.anims.play("hgattack", true);
+    combatRoll()
     if (farmzombiehealth <= 0) {
         setTimeout(function() {
             farmzombie.anims.play("fzdying", true)
@@ -454,9 +455,7 @@ function hgSpecial() {
         zalphaup.restart();
         zalphadown.restart();
         setTimeout(fzAttack, 1000);
-        var zombieDefense = Math.floor(Math.random() * fzDefenseStat) + 1;
-        var playerAttack = (Math.floor(Math.random() * hgAttackStat) + 10) + 5;
-        farmzombiehealth -= Math.floor(Math.random() * (playerAttack - zombieDefense)) + 1;
+        farmzombiehealth -= ((playerAttack * 1.5) - zombieDefense)
         console.log("Z Hit current zombie health is " + farmzombiehealth);
     }
 }
@@ -492,51 +491,57 @@ function timedStoryTelling() {
 
 
 function fzAttack() {
-    farmzombie.anims.play("fzattack", true);
-    
-    var evasionGenerate = Math.floor(Math.random() * 100);
-    combatRoll()
-
-    if (playerhealth <= 0) {
+    if (farmzombiehealth <= 0) {
         setTimeout(function() {
-            player.anims.play("hgdying", true)
+            farmzombie.anims.play("fzdying", true)
         }, 200);
-    } else if (evasionGenerate > hgEvasionStat) {
-        player.anims.play("hghurt", true);
-        setTimeout(function() {
-            keydown = false;
-        }, 500);
-        hittext.setText("Hit!");
-        alphaup.restart();
-        alphadown.restart();
-        playerhealth -= (zombieAttack - playerDefense);
-        healthText.setText('Hp: ' + playerhealth)
-        console.log("Zombie hits you, current player health is " + playerhealth);
-        
-        var updates = {
-            hp: playerhealth,
-            defense: hgDefenseStat,
-            evasion: hgEvasionStat,
-            attack: hgAttackStat,
-        }
-        
-        $.ajax({
-            type: "PUT",
-            url: "/api/update",
-            data: updates,
-        });
-
     } else {
-        player.anims.play("hgrunning", true);
-        hgevade.restart();
-        hittext.setText("Miss!");
-        alphaup.restart();
-        alphadown.restart();
-        console.log(hgevade);
-        playerhealth -= 0
-        console.log("Hg evade")
-        keydown = false;
-    }
+        farmzombie.anims.play("fzattack", true);
+        
+        var evasionGenerate = Math.floor(Math.random() * 100);
+        combatRoll()
+
+        if (playerhealth <= 0) {
+            setTimeout(function() {
+                player.anims.play("hgdying", true)
+            }, 200);
+        } else if (evasionGenerate > hgEvasionStat) {
+            player.anims.play("hghurt", true);
+            setTimeout(function() {
+                keydown = false;
+            }, 500);
+            hittext.setText("Hit!");
+            alphaup.restart();
+            alphadown.restart();
+            playerhealth -= (zombieAttack - playerDefense);
+            healthText.setText('Hp: ' + playerhealth)
+            console.log("Zombie hits you, current player health is " + playerhealth);
+            
+            var updates = {
+                hp: playerhealth,
+                defense: hgDefenseStat,
+                evasion: hgEvasionStat,
+                attack: hgAttackStat,
+            }
+            
+            $.ajax({
+                type: "PUT",
+                url: "/api/update",
+                data: updates,
+            });
+
+        } else {
+            player.anims.play("hgrunning", true);
+            hgevade.restart();
+            hittext.setText("Miss!");
+            alphaup.restart();
+            alphadown.restart();
+            console.log(hgevade);
+            playerhealth -= 0
+            console.log("Hg evade")
+            keydown = false;
+        }
+    } 
 }
 
 function combatRoll() {
@@ -553,6 +558,10 @@ function usePotion () {
         hppotion = false
     }
 }
+
+
+
+
 
 
 
