@@ -10,7 +10,7 @@ var SceneA = new Phaser.Class({
     preload: function () { // preloading all images and atlases
     this.load.atlas("hoodgirl", "assets/hoodgirl.png", "assets/hoodgirl.json");
     this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
-    this.load.image("textbox", "assets/600wguibox.png");
+    this.load.image("textbox1", "assets/600wguibox.png");
     // ajax call to grab dialogue
     $.ajax({
         method: 'GET',
@@ -24,7 +24,7 @@ var SceneA = new Phaser.Class({
 
 create: function () {
     this.add.image(400, 300, "castle"); // adding background image
-    textbox = this.add.image(0, 0, "textbox"); // adding textbox image
+    textbox1 = this.add.image(0, 0, "textbox1"); // adding textbox image
     text = this.add.text(-100, -10, "Farmer zombie has died");
     text.visible = false; // hiding text on page load
     player = this.add.sprite(-100, 450, "hoodgirl", "idle001.png"); 
@@ -38,7 +38,7 @@ create: function () {
     zombietext = this.add.text(510, 380, "", { color: "#ff3434", fontSize: 20 });
     zombietext.setAlpha(0);
     zombietext.setFontStyle("bold");
-    beginText = this.add.text(-120, -10, "Press 'n' to begin story");
+    beginText = this.add.text(-120, -10, "Press 'b' to begin story");
 
 
 // Narration variables
@@ -49,10 +49,10 @@ create: function () {
     storyText4 = this.add.text(-170, -40, dialogue[0].narration.scene1D, textFormat);
     storyText5 = this.add.text(-170, -40, dialogue[0].narration.scene1E, textFormat);
     // Old man zombie scene
-    storyText6 = this.add.text(-170, -40, dialogue[0].narration.scene2A, textFormat);
-    storyText7 = this.add.text(-170, -40, dialogue[0].narration.scene2B, textFormat);
-    storyText8 = this.add.text(-170, -40, dialogue[0].narration.scene2C, textFormat);
-    storyText9 = this.add.text(-170, -40, dialogue[0].narration.scene2D, textFormat);
+    // storyText6 = this.add.text(-170, -40, dialogue[0].narration.scene2A, textFormat);
+    // storyText7 = this.add.text(-170, -40, dialogue[0].narration.scene2B, textFormat);
+    // storyText8 = this.add.text(-170, -40, dialogue[0].narration.scene2C, textFormat);
+    // storyText9 = this.add.text(-170, -40, dialogue[0].narration.scene2D, textFormat);
    
 
 // Hiding text until called on
@@ -62,30 +62,30 @@ create: function () {
     storyText4.visible = false;
     storyText5.visible = false;
 
-    storyText6.visible = false;
-    storyText7.visible = false;
-    storyText8.visible = false;
-    storyText9.visible = false;
+    // storyText6.visible = false;
+    // storyText7.visible = false;
+    // storyText8.visible = false;
+    // storyText9.visible = false;
 
 // setting the text container
-    textcontainer = this.add.container(400, 200, textbox);
-    textcontainer.visible = true;
-    textcontainer = this.add.container(400, 200, textbox); // creating container including textbox
+    textcontainer1 = this.add.container(400, 200, textbox1);
+    textcontainer1.visible = true;
+    textcontainer1 = this.add.container(400, 200, textbox1); // creating container including textbox
     // textcontainer.visible = false; // hiding container on page load, also hides textbox
 
-    textcontainer.setSize(400, 100); // setting container size to be inside of borders of textbox
+    textcontainer1.setSize(400, 100); // setting container size to be inside of borders of textbox
 
-    textcontainer.setInteractive(); 
+    textcontainer1.setInteractive(); 
 
-    textcontainer.on("pointerover", function() {
-        textbox.setTint(0x44ff44);
+    textcontainer1.on("pointerover", function() {
+        textbox1.setTint(0x44ff44);
     });
 
-    textcontainer.on("pointerout", function() {
-        textbox.clearTint();
+    textcontainer1.on("pointerout", function() {
+        textbox1.clearTint();
     });
     
-    textcontainer.add(beginText);
+    textcontainer1.add(beginText);
 
 // Tweens
     // tween to make player walk in to view
@@ -317,8 +317,8 @@ create: function () {
     farmzombie.on("animationcomplete", function() {
         // the zombie will idle on animation complete unless it just completed the dying animation
         if (this.anims.currentAnim.key == "fzdying") {
-            textcontainer.visible = true;
-            textcontainer.add(text);
+            textcontainer1.visible = true;
+            textcontainer1.add(text);
             text.visible = true;
             this.anims.pause(); // pauses the zombie on the last frame of the dying animation
         } else {
@@ -339,9 +339,9 @@ document.addEventListener("keypress", function(event) {
     if (keydown) {
         return false;
     }
-    if (event.key === "n" || event.key === "N") {
+    if (event.key === "b" || event.key === "B") {
         // storyText.visible = true;
-        timedStoryTelling2();
+        timedStoryTelling1();
     }
 });
 
@@ -352,7 +352,7 @@ document.addEventListener("keypress", function(event) {
     }
     if (event.key === "a" || event.key === "A") {
         hgAttack();
-        storyText9.visible = false;
+        storyText5.visible = false;
     }
     if (event.key === "s" || event.key === "S") {
         if (special > 0) {
@@ -434,53 +434,53 @@ function timedStoryTelling1() {
     setTimeout(function () {
         beginText.visible = false;
         storyText.visible = true;
-        textcontainer.add(storyText);
+        textcontainer1.add(storyText);
     }, 500);
     setTimeout(function () {
         storyText.visible = false;
         storyText2.visible = true;
-        textcontainer.add(storyText2);
+        textcontainer1.add(storyText2);
     }, 8000);
     setTimeout(function () {
         storyText2.visible = false;
         storyText3.visible = true;
-        textcontainer.add(storyText3);
+        textcontainer1.add(storyText3);
     }, 16000);
     setTimeout(function () {
         storyText3.visible = false;
         storyText4.visible = true;
-        textcontainer.add(storyText4);
+        textcontainer1.add(storyText4);
     }, 24000);
     setTimeout(function () {
         storyText4.visible = false;
         storyText5.visible = true;
-        textcontainer.add(storyText5);
+        textcontainer1.add(storyText5);
     }, 32000);
 };
 
     // Old man story
-function timedStoryTelling2() {
-    setTimeout(function () {
-        beginText.visible = false;
-        storyText6.visible = true;
-        textcontainer.add(storyText6);
-    }, 500);
-    setTimeout(function () {
-        storyText6.visible = false;
-        storyText7.visible = true;
-        textcontainer.add(storyText7);
-    }, 8000);
-    setTimeout(function () {
-        storyText7.visible = false;
-        storyText8.visible = true;
-        textcontainer.add(storyText8);
-    }, 16000);
-    setTimeout(function () {
-        storyText8.visible = false;
-        storyText9.visible = true;
-        textcontainer.add(storyText9);
-    }, 24000);
-};
+// function timedStoryTelling2() {
+//     setTimeout(function () {
+//         beginText.visible = false;
+//         storyText6.visible = true;
+//         textcontainer.add(storyText6);
+//     }, 500);
+//     setTimeout(function () {
+//         storyText6.visible = false;
+//         storyText7.visible = true;
+//         textcontainer.add(storyText7);
+//     }, 8000);
+//     setTimeout(function () {
+//         storyText7.visible = false;
+//         storyText8.visible = true;
+//         textcontainer.add(storyText8);
+//     }, 16000);
+//     setTimeout(function () {
+//         storyText8.visible = false;
+//         storyText9.visible = true;
+//         textcontainer.add(storyText9);
+//     }, 24000);
+// };
 
 
 function fzAttack() {
@@ -572,7 +572,7 @@ var SceneB = new Phaser.Class({
     preload: function () { // preloading all images and atlases
     this.load.atlas("hoodgirl", "assets/hoodgirl.png", "assets/hoodgirl.json");
     this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
-    this.load.image("textbox", "assets/600wguibox.png");
+    this.load.image("textbox2", "assets/600wguibox.png");
     // ajax call to grab dialogue
     $.ajax({
         method: 'GET',
@@ -586,7 +586,7 @@ var SceneB = new Phaser.Class({
 
     create: function () {
     this.add.image(400, 300, "forest"); // adding background image
-    textbox = this.add.image(0, 0, "textbox"); // adding textbox image
+    textbox2 = this.add.image(0, 0, "textbox2"); // adding textbox image
     text = this.add.text(-100, -10, "Farmer zombie has died");
     text.visible = false; // hiding text on page load
     player = this.add.sprite(-100, 450, "hoodgirl", "idle001.png"); 
@@ -604,12 +604,7 @@ var SceneB = new Phaser.Class({
    
 
 // Narration variables
-    // Story intro scene
-    storyText = this.add.text(-170, -40, dialogue[0].narration.scene1A, textFormat);
-    storyText2 = this.add.text(-170, -40, dialogue[0].narration.scene1B, textFormat);
-    storyText3 = this.add.text(-170, -40, dialogue[0].narration.scene1C, textFormat);
-    storyText4 = this.add.text(-170, -40, dialogue[0].narration.scene1D, textFormat);
-    storyText5 = this.add.text(-170, -40, dialogue[0].narration.scene1E, textFormat);
+
     // Old man zombie scene
     storyText6 = this.add.text(-170, -40, dialogue[0].narration.scene2A, textFormat);
     storyText7 = this.add.text(-170, -40, dialogue[0].narration.scene2B, textFormat);
@@ -618,11 +613,6 @@ var SceneB = new Phaser.Class({
    
 
 // Hiding text until called on
-    storyText.visible = false;
-    storyText2.visible = false;
-    storyText3.visible = false;
-    storyText4.visible = false;
-    storyText5.visible = false;
 
     storyText6.visible = false;
     storyText7.visible = false;
@@ -630,24 +620,24 @@ var SceneB = new Phaser.Class({
     storyText9.visible = false;
 
 // setting the text container
-    textcontainer = this.add.container(400, 200, textbox);
-    textcontainer.visible = true;
-    textcontainer = this.add.container(400, 200, textbox); // creating container including textbox
+    textcontainer2 = this.add.container(400, 200, textbox2);
+    textcontainer2.visible = true;
+    textcontainer2 = this.add.container(400, 200, textbox2); // creating container including textbox
     // textcontainer.visible = false; // hiding container on page load, also hides textbox
 
-    textcontainer.setSize(400, 100); // setting container size to be inside of borders of textbox
+    textcontainer2.setSize(400, 100); // setting container size to be inside of borders of textbox
 
-    textcontainer.setInteractive(); 
+    textcontainer2.setInteractive(); 
 
-    textcontainer.on("pointerover", function() {
+    textcontainer2.on("pointerover", function() {
         textbox.setTint(0x44ff44);
     });
 
-    textcontainer.on("pointerout", function() {
+    textcontainer2.on("pointerout", function() {
         textbox.clearTint();
     });
     
-    textcontainer.add(beginText);
+    textcontainer2.add(beginText);
 
 // Tweens
     // tween to make player walk in to view
@@ -879,9 +869,10 @@ var SceneB = new Phaser.Class({
     farmzombie.on("animationcomplete", function() {
         // the zombie will idle on animation complete unless it just completed the dying animation
         if (this.anims.currentAnim.key == "fzdying") {
-            textcontainer.visible = true;
-            textcontainer.add(text);
+            textcontainer2.visible = true;
+            textcontainer2.add(text);
             text.visible = true;
+            storyText9.visible = false;
             this.anims.pause(); // pauses the zombie on the last frame of the dying animation
         } else {
             farmzombie.play("fzidle");
@@ -991,56 +982,28 @@ function hgSpecial() {
 }
 
 // Narration cycle in textbox
-    // Intro Story
-function timedStoryTelling1() {
-    setTimeout(function () {
-        beginText.visible = false;
-        storyText.visible = true;
-        textcontainer.add(storyText);
-    }, 500);
-    setTimeout(function () {
-        storyText.visible = false;
-        storyText2.visible = true;
-        textcontainer.add(storyText2);
-    }, 8000);
-    setTimeout(function () {
-        storyText2.visible = false;
-        storyText3.visible = true;
-        textcontainer.add(storyText3);
-    }, 16000);
-    setTimeout(function () {
-        storyText3.visible = false;
-        storyText4.visible = true;
-        textcontainer.add(storyText4);
-    }, 24000);
-    setTimeout(function () {
-        storyText4.visible = false;
-        storyText5.visible = true;
-        textcontainer.add(storyText5);
-    }, 32000);
-};
 
     // Old man story
 function timedStoryTelling2() {
     setTimeout(function () {
         beginText.visible = false;
         storyText6.visible = true;
-        textcontainer.add(storyText6);
+        textcontainer2.add(storyText6);
     }, 500);
     setTimeout(function () {
         storyText6.visible = false;
         storyText7.visible = true;
-        textcontainer.add(storyText7);
+        textcontainer2.add(storyText7);
     }, 8000);
     setTimeout(function () {
         storyText7.visible = false;
         storyText8.visible = true;
-        textcontainer.add(storyText8);
+        textcontainer2.add(storyText8);
     }, 16000);
     setTimeout(function () {
         storyText8.visible = false;
         storyText9.visible = true;
-        textcontainer.add(storyText9);
+        textcontainer2.add(storyText9);
     }, 24000);
 };
 
@@ -1133,7 +1096,7 @@ var SceneC = new Phaser.Class({
     preload: function () { // preloading all images and atlases
     this.load.atlas("hoodgirl", "assets/hoodgirl.png", "assets/hoodgirl.json");
     this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
-    this.load.image("textbox", "assets/600wguibox.png");
+    this.load.image("textbox3", "assets/600wguibox.png");
     // ajax call to grab dialogue
     $.ajax({
         method: 'GET',
@@ -1147,8 +1110,8 @@ var SceneC = new Phaser.Class({
 
 create: function () {
     this.add.image(400, 300, "house"); // adding background image
-    textbox = this.add.image(0, 0, "textbox"); // adding textbox image
-    text = this.add.text(-100, -10, "Farmer zombie has died");
+    textbox3 = this.add.image(0, 0, "textbox3"); // adding textbox image
+    text = this.add.text(-100, -10, "Child zombie has died.");
     text.visible = false; // hiding text on page load
     player = this.add.sprite(-100, 450, "hoodgirl", "idle001.png"); 
     farmzombie = this.add.sprite(900, 450, "farmzombie", "idle001.png");
@@ -1161,54 +1124,42 @@ create: function () {
     zombietext = this.add.text(510, 380, "", { color: "#ff3434", fontSize: 20 });
     zombietext.setAlpha(0);
     zombietext.setFontStyle("bold");
-    beginText = this.add.text(-120, -10, "Press 'n' to begin story");
+    beginText = this.add.text(-120, -10, "Press 'm' to begin story");
 
 
 // Narration variables
-    // Story intro scene
-    storyText = this.add.text(-170, -40, dialogue[0].narration.scene1A, textFormat);
-    storyText2 = this.add.text(-170, -40, dialogue[0].narration.scene1B, textFormat);
-    storyText3 = this.add.text(-170, -40, dialogue[0].narration.scene1C, textFormat);
-    storyText4 = this.add.text(-170, -40, dialogue[0].narration.scene1D, textFormat);
-    storyText5 = this.add.text(-170, -40, dialogue[0].narration.scene1E, textFormat);
-    // Old man zombie scene
-    storyText6 = this.add.text(-170, -40, dialogue[0].narration.scene2A, textFormat);
-    storyText7 = this.add.text(-170, -40, dialogue[0].narration.scene2B, textFormat);
-    storyText8 = this.add.text(-170, -40, dialogue[0].narration.scene2C, textFormat);
-    storyText9 = this.add.text(-170, -40, dialogue[0].narration.scene2D, textFormat);
+    // House intro scene
+    storyText10 = this.add.text(-170, -40, dialogue[0].narration.scene3A, textFormat);
+    storyText11 = this.add.text(-170, -40, dialogue[0].narration.scene3B, textFormat);
+    storyText12 = this.add.text(-170, -40, dialogue[0].narration.scene3C, textFormat);
+
    
 
 // Hiding text until called on
-    storyText.visible = false;
-    storyText2.visible = false;
-    storyText3.visible = false;
-    storyText4.visible = false;
-    storyText5.visible = false;
+    storyText10.visible = false;
+    storyText11.visible = false;
+    storyText12.visible = false;
 
-    storyText6.visible = false;
-    storyText7.visible = false;
-    storyText8.visible = false;
-    storyText9.visible = false;
 
 // setting the text container
-    textcontainer = this.add.container(400, 200, textbox);
-    textcontainer.visible = true;
-    textcontainer = this.add.container(400, 200, textbox); // creating container including textbox
+    textcontainer3 = this.add.container(400, 200, textbox3);
+    textcontainer3.visible = true;
+    textcontainer3 = this.add.container(400, 200, textbox3); // creating container including textbox
     // textcontainer.visible = false; // hiding container on page load, also hides textbox
 
-    textcontainer.setSize(400, 100); // setting container size to be inside of borders of textbox
+    textcontainer3.setSize(400, 100); // setting container size to be inside of borders of textbox
 
-    textcontainer.setInteractive(); 
+    textcontainer3.setInteractive(); 
 
-    textcontainer.on("pointerover", function() {
-        textbox.setTint(0x44ff44);
+    textcontainer3.on("pointerover", function() {
+        textbox3.setTint(0x44ff44);
     });
 
-    textcontainer.on("pointerout", function() {
-        textbox.clearTint();
+    textcontainer3.on("pointerout", function() {
+        textbox3.clearTint();
     });
     
-    textcontainer.add(beginText);
+    textcontainer3.add(beginText);
 
 // Tweens
     // tween to make player walk in to view
@@ -1440,9 +1391,10 @@ create: function () {
     farmzombie.on("animationcomplete", function() {
         // the zombie will idle on animation complete unless it just completed the dying animation
         if (this.anims.currentAnim.key == "fzdying") {
-            textcontainer.visible = true;
-            textcontainer.add(text);
+            textcontainer3.visible = true;
+            textcontainer3.add(text);
             text.visible = true;
+            // storyText12.visible = false;
             this.anims.pause(); // pauses the zombie on the last frame of the dying animation
         } else {
             farmzombie.play("fzidle");
@@ -1462,9 +1414,8 @@ document.addEventListener("keypress", function(event) {
     if (keydown) {
         return false;
     }
-    if (event.key === "n" || event.key === "N") {
-        // storyText.visible = true;
-        timedStoryTelling2();
+    if (event.key === "m" || event.key === "M") {
+        timedStoryTelling3();
     }
 });
 
@@ -1553,56 +1504,22 @@ function hgSpecial() {
 
 // Narration cycle in textbox
     // Intro Story
-function timedStoryTelling1() {
+function timedStoryTelling3() {
     setTimeout(function () {
         beginText.visible = false;
-        storyText.visible = true;
-        textcontainer.add(storyText);
+        storyText10.visible = true;
+        textcontainer3.add(storyText10);
     }, 500);
     setTimeout(function () {
-        storyText.visible = false;
-        storyText2.visible = true;
-        textcontainer.add(storyText2);
+        storyText10.visible = false;
+        storyText11.visible = true;
+        textcontainer3.add(storyText11);
     }, 8000);
     setTimeout(function () {
-        storyText2.visible = false;
-        storyText3.visible = true;
-        textcontainer.add(storyText3);
+        storyText11.visible = false;
+        storyText12.visible = true;
+        textcontainer3.add(storyText12);
     }, 16000);
-    setTimeout(function () {
-        storyText3.visible = false;
-        storyText4.visible = true;
-        textcontainer.add(storyText4);
-    }, 24000);
-    setTimeout(function () {
-        storyText4.visible = false;
-        storyText5.visible = true;
-        textcontainer.add(storyText5);
-    }, 32000);
-};
-
-    // Old man story
-function timedStoryTelling2() {
-    setTimeout(function () {
-        beginText.visible = false;
-        storyText6.visible = true;
-        textcontainer.add(storyText6);
-    }, 500);
-    setTimeout(function () {
-        storyText6.visible = false;
-        storyText7.visible = true;
-        textcontainer.add(storyText7);
-    }, 8000);
-    setTimeout(function () {
-        storyText7.visible = false;
-        storyText8.visible = true;
-        textcontainer.add(storyText8);
-    }, 16000);
-    setTimeout(function () {
-        storyText8.visible = false;
-        storyText9.visible = true;
-        textcontainer.add(storyText9);
-    }, 24000);
 };
 
 
@@ -1705,8 +1622,6 @@ var player;
 var cursors;
 var farmzombie;
 var keydown = false;
-var textcontainer;
-var textbox;
 var text;
 var healthText;
 var enemyText;
@@ -1729,6 +1644,12 @@ var textFormat = {
     align: "center",
     wordWrap: {width: 350}, 
 };
+var textcontainer1;
+var textbox1;
+var textcontainer2;
+var textbox2;
+var textcontainer3;
+var textbox3;
 var storyText;
 var storyText2;
 var storyText3;
@@ -1738,7 +1659,11 @@ var storyText6;
 var storyText7;
 var storyText8;
 var storyText9;
+var storyText10;
+var storyText11;
+var storyText12;
 var beginText;
+
 
 
 var game = new Phaser.Game(config);
