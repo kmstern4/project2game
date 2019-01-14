@@ -33,14 +33,24 @@ var hgAttackStat = 15;
 var fzAttackStat = 10;
 var hgDefenseStat = 5;
 var fzDefenseStat = 1;
-var hgEvasionStat = 10; //10
-var fzEvasionStat = 5; //5
-var zombieAttack = 0;
-var zombieDefense = 0;
-var playerAttack = 0;
-var playerDefense = 0;
+var hgEvasionStat = 10;
+var fzEvasionStat = 5;
+var zombieAttack = 0; 
+var zombieDefense = 0; 
+var playerAttack = 0; 
+var playerDefense = 0; 
 var special = 0;
 var hppotion = true;
+var textFormat = {
+    align: "center",
+    wordWrap: {width: 350}, 
+};
+var storyText;
+var storyText2;
+var storyText3;
+var storyText4;
+var storyText5;
+var beginText;
 
 
 var game = new Phaser.Game(config);
@@ -49,6 +59,14 @@ function preload() { // preloading all images and atlases
     this.load.atlas("hoodgirl", "assets/hoodgirl.png", "assets/hoodgirl.json");
     this.load.atlas("farmzombie", "assets/farmzombie.png", "assets/farmzombie.json");
     this.load.image("textbox", "assets/600wguibox.png");
+    // ajax call to grab dialogue
+    $.ajax({
+        method: 'GET',
+        url: '/api/speech'
+    }).then(function (response) {
+        dialogue = response;
+        console.log(dialogue);
+    })
     this.load.image("forest", "assets/forest.png");
 }
 
@@ -66,10 +84,28 @@ function create() {
     zombietext = this.add.text(510, 380, "", { color: "#ff3434", fontSize: 20 });
     zombietext.setAlpha(0);
     zombietext.setFontStyle("bold");
+    beginText = this.add.text(-120, -10, "Press 'n' to begin story");
+   
+
+// Narration variables
+    storyText = this.add.text(-170, -40, dialogue[0].narration.scene1A, textFormat);
+    storyText2 = this.add.text(-170, -40, dialogue[0].narration.scene1B, textFormat);
+    storyText3 = this.add.text(-170, -40, dialogue[0].narration.scene1C, textFormat);
+    storyText4 = this.add.text(-170, -40, dialogue[0].narration.scene1D, textFormat);
+    storyText5 = this.add.text(-170, -40, dialogue[0].narration.scene1E, textFormat);
+
+// Hiding text until called on
+    storyText.visible = false;
+    storyText2.visible = false;
+    storyText3.visible = false;
+    storyText4.visible = false;
+    storyText5.visible = false;
 
 // setting the text container
+    textcontainer = this.add.container(400, 200, textbox);
+    textcontainer.visible = true;
     textcontainer = this.add.container(400, 200, textbox); // creating container including textbox
-    textcontainer.visible = false; // hiding container on page load, also hides textbox
+    // textcontainer.visible = false; // hiding container on page load, also hides textbox
 
     textcontainer.setSize(400, 100); // setting container size to be inside of borders of textbox
 
@@ -82,7 +118,8 @@ function create() {
     textcontainer.on("pointerout", function() {
         textbox.clearTint();
     });
-
+    
+    textcontainer.add(beginText);
 
 // Tweens
     // tween to make player walk in to view
@@ -329,9 +366,18 @@ function create() {
 function update() {
 // function that will run 60 times per minute
 
-
 }
 
+// Event Listener for beginning the narration
+document.addEventListener("keypress", function(event) {
+    if (keydown) {
+        return false;
+    }
+    if (event.key === "n" || event.key === "N") {
+        // storyText.visible = true;
+        timedStoryTelling();
+    }
+});
 
 
 document.addEventListener("keypress", function(event) {
@@ -340,6 +386,7 @@ document.addEventListener("keypress", function(event) {
     }
     if (event.key === "a" || event.key === "A") {
         hgAttack();
+        storyText5.visible = false;
     }
     if (event.key === "s" || event.key === "S") {
         if (special > 0) {
@@ -352,6 +399,9 @@ document.addEventListener("keypress", function(event) {
         usePotion();
     }
 });
+
+
+
 
 function hgAttack() {
     keydown = true;
@@ -410,6 +460,36 @@ function hgSpecial() {
         console.log("Z Hit current zombie health is " + farmzombiehealth);
     }
 }
+
+// Narration cycle in textbox
+function timedStoryTelling() {
+    setTimeout(function () {
+        beginText.visible = false;
+        storyText.visible = true;
+        textcontainer.add(storyText);
+    }, 500);
+    setTimeout(function () {
+        storyText.visible = false;
+        storyText2.visible = true;
+        textcontainer.add(storyText2);
+    }, 5000);
+    setTimeout(function () {
+        storyText2.visible = false;
+        storyText3.visible = true;
+        textcontainer.add(storyText3);
+    }, 10000);
+    setTimeout(function () {
+        storyText3.visible = false;
+        storyText4.visible = true;
+        textcontainer.add(storyText4);
+    }, 15000);
+    setTimeout(function () {
+        storyText4.visible = false;
+        storyText5.visible = true;
+        textcontainer.add(storyText5);
+    }, 20000);
+};
+
 
 function fzAttack() {
     farmzombie.anims.play("fzattack", true);
