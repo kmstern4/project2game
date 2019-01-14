@@ -50,6 +50,10 @@ var storyText2;
 var storyText3;
 var storyText4;
 var storyText5;
+var storyText6;
+var storyText7;
+var storyText8;
+var storyText9;
 var beginText;
 
 
@@ -88,11 +92,18 @@ function create() {
    
 
 // Narration variables
+    // Story intro scene
     storyText = this.add.text(-170, -40, dialogue[0].narration.scene1A, textFormat);
     storyText2 = this.add.text(-170, -40, dialogue[0].narration.scene1B, textFormat);
     storyText3 = this.add.text(-170, -40, dialogue[0].narration.scene1C, textFormat);
     storyText4 = this.add.text(-170, -40, dialogue[0].narration.scene1D, textFormat);
     storyText5 = this.add.text(-170, -40, dialogue[0].narration.scene1E, textFormat);
+    // Old man zombie scene
+    storyText6 = this.add.text(-170, -40, dialogue[0].narration.scene2A, textFormat);
+    storyText7 = this.add.text(-170, -40, dialogue[0].narration.scene2B, textFormat);
+    storyText8 = this.add.text(-170, -40, dialogue[0].narration.scene2C, textFormat);
+    storyText9 = this.add.text(-170, -40, dialogue[0].narration.scene2D, textFormat);
+   
 
 // Hiding text until called on
     storyText.visible = false;
@@ -100,6 +111,11 @@ function create() {
     storyText3.visible = false;
     storyText4.visible = false;
     storyText5.visible = false;
+
+    storyText6.visible = false;
+    storyText7.visible = false;
+    storyText8.visible = false;
+    storyText9.visible = false;
 
 // setting the text container
     textcontainer = this.add.container(400, 200, textbox);
@@ -375,7 +391,7 @@ document.addEventListener("keypress", function(event) {
     }
     if (event.key === "n" || event.key === "N") {
         // storyText.visible = true;
-        timedStoryTelling();
+        timedStoryTelling2();
     }
 });
 
@@ -386,7 +402,7 @@ document.addEventListener("keypress", function(event) {
     }
     if (event.key === "a" || event.key === "A") {
         hgAttack();
-        storyText5.visible = false;
+        storyText9.visible = false;
     }
     if (event.key === "s" || event.key === "S") {
         if (special > 0) {
@@ -461,7 +477,8 @@ function hgSpecial() {
 }
 
 // Narration cycle in textbox
-function timedStoryTelling() {
+    // Intro Story
+function timedStoryTelling1() {
     setTimeout(function () {
         beginText.visible = false;
         storyText.visible = true;
@@ -471,22 +488,46 @@ function timedStoryTelling() {
         storyText.visible = false;
         storyText2.visible = true;
         textcontainer.add(storyText2);
-    }, 5000);
+    }, 8000);
     setTimeout(function () {
         storyText2.visible = false;
         storyText3.visible = true;
         textcontainer.add(storyText3);
-    }, 10000);
+    }, 16000);
     setTimeout(function () {
         storyText3.visible = false;
         storyText4.visible = true;
         textcontainer.add(storyText4);
-    }, 15000);
+    }, 24000);
     setTimeout(function () {
         storyText4.visible = false;
         storyText5.visible = true;
         textcontainer.add(storyText5);
-    }, 20000);
+    }, 32000);
+};
+
+    // Old man story
+function timedStoryTelling2() {
+    setTimeout(function () {
+        beginText.visible = false;
+        storyText6.visible = true;
+        textcontainer.add(storyText6);
+    }, 500);
+    setTimeout(function () {
+        storyText6.visible = false;
+        storyText7.visible = true;
+        textcontainer.add(storyText7);
+    }, 8000);
+    setTimeout(function () {
+        storyText7.visible = false;
+        storyText8.visible = true;
+        textcontainer.add(storyText8);
+    }, 16000);
+    setTimeout(function () {
+        storyText8.visible = false;
+        storyText9.visible = true;
+        textcontainer.add(storyText9);
+    }, 24000);
 };
 
 
